@@ -57,13 +57,13 @@ Ipgeolocation provides a set of APIs to make ip based decisions.
 Install via command line:
 
 ```bash
-gem install ipgeolocation
+gem install ipgeolocation_sdk
 ```
 
 Or add to your `Gemfile`:
 
 ```ruby
-gem 'ipgeolocation', '~> 1.0.0'
+gem 'ipgeolocation_sdk', '~> 1.0.0'
 ```
 
 Then run:
@@ -79,8 +79,8 @@ bundle install
 To build and install locally:
 
 ```bash
-gem build ipgeolocation.gemspec
-gem install ./ipgeolocation-1.0.0.gem
+gem build ipgeolocation_sdk.gemspec
+gem install ./ipgeolocation_sdk-1.0.0.gem
 ```
 
 ---
@@ -90,7 +90,7 @@ gem install ./ipgeolocation-1.0.0.gem
 To install directly from a GitHub repository:
 
 ```ruby
-gem 'ipgeolocation', git: 'https://github.com/IPGeolocation/ip-geolocation-ruby-sdk.git'
+gem 'ipgeolocation_sdk', git: 'https://github.com/IPGeolocation/ip-geolocation-ruby-sdk.git'
 ```
 
 ## Authentication
@@ -604,7 +604,7 @@ For full API specifications, refer to the [official IP Security API documentatio
 get_ip_security_opts = {
     ip: "2.56.188.34"
 }
-security_instance = IpgeolocationSdk::IPSecurityAPI.new
+security_instance = IpgeolocationSdk::IPSecurityApi.new
 begin 
     result = security_instance.get_ip_security_info(get_ip_security_opts)
     p result
@@ -638,7 +638,7 @@ get_ip_security_opts = {
     ip: "2.56.188.34",
     include: "location,network,currency,time_zone,user_agent,country_metadata,hostname"
 }
-security_instance = IpgeolocationSdk::IPSecurityAPI.new
+security_instance = IpgeolocationSdk::IPSecurityApi.new
 begin 
     result = security_instance.get_ip_security_info(get_ip_security_opts)
     p result
@@ -766,7 +766,7 @@ get_ip_security_opts = {
     ip: "195.154.221.54",
     fields: "security.is_tor,security.is_proxy,security.is_bot,security.is_spam"
 }
-security_instance = IpgeolocationSdk::IPSecurityAPI.new
+security_instance = IpgeolocationSdk::IPSecurityApi.new
 begin 
     result = security_instance.get_ip_security_info(get_ip_security_opts)
     p result
