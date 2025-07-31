@@ -119,8 +119,8 @@ Class | Method | HTTP request | Description
 *IpgeolocationSdk::ASNLookupApi* | [**get_asn_info**](docs/ASNLookupApi.md#get_asn_info) | **GET** /asn | Get details of any ASN number or associated IP address
 *IpgeolocationSdk::AbuseContactApi* | [**get_abuse_contact_info**](docs/AbuseContactApi.md#get_abuse_contact_info) | **GET** /abuse | Retrieve abuse reporting contact information for a given IP address
 *IpgeolocationSdk::AstronomyApi* | [**get_astronomy_details**](docs/AstronomyApi.md#get_astronomy_details) | **GET** /astronomy | Get sunrise, sunset, moonrise, moonset, and related data for a location
-*IpgeolocationSdk::IPGeolocationAPI* | [**get_bulk_ip_geolocation**](docs/IPLocationApi.md#get_bulk_ip_geolocation) | **POST** /ipgeo-bulk | Get geolocation data for multiple IP addresses in a single API request
-*IpgeolocationSdk::IPGeolocationAPI* | [**get_ip_geolocation**](docs/IPLocationApi.md#get_ip_geolocation) | **GET** /ipgeo | Get geolocation data for a single IP address
+*IpgeolocationSdk::IPGeolocationApi* | [**get_bulk_ip_geolocation**](docs/IPLocationApi.md#get_bulk_ip_geolocation) | **POST** /ipgeo-bulk | Get geolocation data for multiple IP addresses in a single API request
+*IpgeolocationSdk::IPGeolocationApi* | [**get_ip_geolocation**](docs/IPLocationApi.md#get_ip_geolocation) | **GET** /ipgeo | Get geolocation data for a single IP address
 *IpgeolocationSdk::IPSecurityApi* | [**get_bulk_ip_security_info**](docs/SecurityApi.md#get_bulk_ip_security_info) | **POST** /security-bulk | Retrieve security threat intelligence for multiple IPs
 *IpgeolocationSdk::IPSecurityApi* | [**get_ip_security_info**](docs/SecurityApi.md#get_ip_security_info) | **GET** /security |  Retrieve security threat intelligence for a single IP
 *IpgeolocationSdk::TimeConversionApi* | [**convert_time_between_timezones**](docs/TimeConversionApi.md#convert_time_between_timezones) | **GET** /timezone/convert |  Convert time between two specified timezones
