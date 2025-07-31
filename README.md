@@ -47,8 +47,11 @@ Ipgeolocation provides a set of APIs to make ip based decisions.
    - [Astronomy by Location String](#astronomy-by-location-string)
    - [Astronomy for Specific Date](#astronomy-for-specific-date)
    - [Astronomy in Different Language](#astronomy-in-different-language)
-
-11. [Documentation for Models](#documentation-for-models)
+11. [Abuse Contact Api Examples](#abuse-contact-api-examples)
+   - [Lookup Abuse Contact by IP](#lookup-abuse-contact-by-ip)
+   - [Lookup Abuse Contact with Specific Fields](#lookup-abuse-contact-with-specific-fields)
+   - [Lookup Abuse Contact while Excluding Fields](#lookup-abuse-contact-while-excluding-fields)
+12. [Documentation for Models](#documentation-for-models)
 
 ## Installation
 
