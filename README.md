@@ -1,71 +1,94 @@
-# IPGeolocation SDK
+# IP Geolocation API Library/SDK for Ruby
 
-Ipgeolocation provides a set of APIs to make ip based decisions.
+## Overview
+The official **Ruby Client Library** for **[IPGeolocation.io](https://ipgeolocation.io)**'s set of APIs, provides a quick, developer friendly, way to access IP Location, Security, Timezone, Astronomy, ASN, Abuse Contact, and useragent data. Lookup your own IP or provide any IPv4, IPv6 or domain name to get structured results in Ruby, without the need for manual HTTP requests or response parsing.
 
+- [IP Location API](https://ipgeolocation.io/ip-location-api.html): Get all-in-one unified solution for **location** (city, locality, state, country, etc.), **currency**, **network** (AS number, ASN name, organization, asn type, date of allocation, company/ISP name, company type, company domain), **timezone** , **useragent** string parsing, **security** (threat score, is_tor, is_bot, proxy_provider, cloud_provider), and **abuse contact** (route/CIDR network, country, address, email, phone numbers) information.
+- [IP Security API](https://ipgeolocation.io/ip-security-api.html): Get security, network, location, hostname, timezone and useragent parsing.
+- [ASN API](https://ipgeolocation.io/asn-api.html): Get ASN details along with peers, upstreams, downstreams, routes, and raw WHOIS.
+- [Abuse Contact API](https://ipgeolocation.io/ip-abuse-contact-api.html): Get abuse emails, phone numbers, kind, organization, route/CIDR network and country.
+- [Astronomy API](https://ipgeolocation.io/astronomy-api.html): Get sunrise, sunset, moonrise, moonset, moon phases with precise twilight period times in combination with location information.
+- [Timezone API](https://ipgeolocation.io/timezone-api.html): Get timezone name, multiple time formats, daylight saving status and its details along with location information.
+- [Timezone Convert API](https://ipgeolocation.io/timezone-api.html): Convert time between timezone names, geo coordinates, location addresses, IATA codes, ICAO codes, or UN/LOCODE.
+- [User Agent API](https://ipgeolocation.io/user-agent-api.html): Get browser, Operating System, and device info from single or multiple Useragent string parsing.
 
-- Supports IPGeolocation API version: 2.0
-- Package version: 1.0.0
+This Ruby Gem aims to empower developers to integrate threat intelligence, personalization, fraud prevention, compliance, and analytics features directly into Ruby based applications. Whether you're enriching signup forms with ip geolocation data, localizing content, embedding threat intelligence in back-end systems, or converting time zones and currencies, the library ensures seamless, scalable integration with IPGeolocation.io’s global API infrastructure.
+
+Based on:
+- API version: 2.0.0
+
+**Official Release:**
+- Available on [**RubyGems.org**](https://rubygems.org/gems/ipgeolocation_sdk)  [![Gem Version](https://badge.fury.io/rb/ipgeolocation_sdk.svg)](https://badge.fury.io/rb/ipgeolocation_sdk)
+- Source Code: [**GitHub Repository**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk)
 
 ## Table of Contents
 
-1. [Installation](#installation)
-2. [Authentication](#authentication)
-3. [API Endpoints](#api-endpoints)
-4. [IP Geolocation Examples](#ip-geolocation-examples)
-   - [1. Developer (Free) Plan Examples](#1-developer-free-plan-examples)
-   - [2. Standard Plan Examples](#2-standard-plan-examples)
-   - [3. Advanced Plan Examples](#3-advanced-plan-examples)
+1. [Requirements](#requirements)
+2. [Installation](#installation)
+   - [From RubyGems.org](#from-rubygemsorg)
+   - [From Source (Local Build)](#from-source-local-build)
+   - [From GitHub](#from-github)
+3. [API Plan Tiers and Documentation](#api-plan-tiers-and-documentation)
+4. [API Endpoints](#api-endpoints)
+5. [Fields and Methods Availability](#fields-and-methods-availability)
+6. [Authentication Setup](#authentication-setup)
+   - [How to Get Your API Key](#how-to-get-your-api-key)
+   - [ApiKeyAuth](#apikeyauth)
+7. [Accessing API response fields](#accessing-api-response-fields)
+   - [Access a specific field](#access-a-specific-field)
+   - [Get JSON response](#get-json-response)
+8. [IP Geolocation Examples](#ip-geolocation-examples)
+   - [Developer (Free) Plan Examples](#developer-plan-examples)
+   - [Standard Plan Examples](#standard-plan-examples)
+   - [Advanced Plan Examples](#advanced-plan-examples)
    - [Bulk IP Geolocation Example](#bulk-ip-geolocation-example)
-5. [IP Security Examples](#ip-security-examples)
-   - [Basic Request (Minimal Setup)](#basic-request-minimal-setup)
+9. [IP Security Examples](#ip-security-examples)
+   - [Get Default Security Fields](#get-default-security-fields)
    - [Include Multiple Optional Fields](#include-multiple-optional-fields)
    - [Request with Field Filtering](#request-with-field-filtering)
    - [Bulk IP Security Request](#bulk-ip-security-request)
+10. [ASN API Examples](#asn-api-examples)
+    - [Get ASN Information by IP Address](#get-asn-information-by-ip-address)
+    - [Get ASN Information by ASN Number](#get-asn-information-by-asn-number)
+    - [Combine All objects using Include](#combine-all-objects-using-include)
+11. [Abuse Contact API Examples](#abuse-contact-api-examples)
+    - [Lookup Abuse Contact by IP](#lookup-abuse-contact-by-ip)
+    - [Lookup Abuse Contact with Specific Fields](#lookup-abuse-contact-with-specific-fields)
+    - [Lookup Abuse Contact while Excluding Fields](#lookup-abuse-contact-while-excluding-fields)
+12. [Timezone API Examples](#timezone-api-examples)
+    - [Get Timezone by IP Address](#get-timezone-by-ip-address)
+    - [Get Timezone by Timezone Name](#get-timezone-by-timezone-name)
+    - [Get Timezone from Any Address](#get-timezone-from-any-address)
+    - [Get Timezone from Location Coordinates](#get-timezone-from-location-coordinates)
+    - [Get Timezone and Airport Details from IATA Code](#get-timezone-and-airport-details-from-iata-code)
+    - [Get Timezone and City Details from UN/LOCODE](#get-timezone-and-city-details-from-unlocode)
+13. [Timezone Converter Examples](#timezone-converter-examples)
+    - [Convert Current Time from One Timezone to Another](#convert-current-time-from-one-timezone-to-another)
+14. [User Agent API Examples](#user-agent-api-examples)
+    - [Parse a Basic User Agent String](#parse-a-basic-user-agent-string)
+    - [Bulk User Agent Parsing Example](#bulk-user-agent-parsing-example)
+15. [Astronomy API Examples](#astronomy-api-examples)
+    - [Lookup Astronomy by Coordinates](#lookup-astronomy-api-by-coordinates)
+    - [Lookup Astronomy by IP Address](#lookup-astronomy-api-by-ip-address)
+    - [Lookup Astronomy by Location String](#lookup-astronomy-api-by-location-string)
+    - [Lookup Astronomy for Specific Date](#lookup-astronomy-api-for-a-specific-date)
+    - [Lookup Location Info in Different Language](#lookup-location-info-in-different-language)
+16. [Documentation for Models](#documentation-for-models)
 
-6. [ASN API Examples](#asn-api-examples)
-   - [Get ASN Information by IP Address](#get-asn-information-by-ip-address)
-   - [Get ASN Information by ASN Number](#get-asn-information-by-asn-number)
-   - [Combine All objects using Include](#combine-all-objects-using-include)
-
-7. [Timezone API Examples](#timezone-api-examples)
-   - [Get Timezone by IP Address](#get-timezone-by-ip-address)
-   - [Get Timezone by Timezone Name](#get-timezone-by-timezone-name)
-   - [Get Timezone from Any Address](#get-timezone-from-any-address)
-   - [Get Timezone from Location Coordinates](#get-timezone-from-location-coordinates)
-   - [Get Timezone and Airport Details from IATA Code](#get-timezone-and-airport-details-from-iata-code)
-   - [Get Timezone and City Details from UN/LOCODE](#get-timezone-and-city-details-from-unlocode)
-
-8. [Timezone Converter Examples](#timezone-converter-examples)
-   - [Convert Current Time from One Timezone to Another](#convert-current-time-from-one-timezone-to-another)
-
-9. [User Agent API Examples](#user-agent-api-examples)
-   - [Parse a Basic User Agent String](#parse-a-basic-user-agent-string)
-   - [Bulk User Agent Parsing Example](#bulk-user-agent-parsing-example)
-10. [Astronomy API Examples](#astronomy-api-examples)
-   - [Astronomy by Coordinates](#astronomy-by-coordinates)
-   - [Astronomy by IP Address](#astronomy-by-ip-address)
-   - [Astronomy by Location String](#astronomy-by-location-string)
-   - [Astronomy for Specific Date](#astronomy-for-specific-date)
-   - [Astronomy in Different Language](#astronomy-in-different-language)
-11. [Abuse Contact Api Examples](#abuse-contact-api-examples)
-   - [Lookup Abuse Contact by IP](#lookup-abuse-contact-by-ip)
-   - [Lookup Abuse Contact with Specific Fields](#lookup-abuse-contact-with-specific-fields)
-   - [Lookup Abuse Contact while Excluding Fields](#lookup-abuse-contact-while-excluding-fields)
-12. [Documentation for Models](#documentation-for-models)
+## Requirements
+- Ruby >= 2.7
+- API Key from [IPGeolocation.io](https://ipgeolocation.io)
 
 ## Installation
-
-### From RubyGems
-
+### From RubyGems.org
 Install via command line:
-
 ```bash
 gem install ipgeolocation_sdk
 ```
+May be you need to run the command with root permissions. like `sudo gem install ipgeolocation_sdk`.
 
 Or add to your `Gemfile`:
-
-```ruby
+```
 gem 'ipgeolocation_sdk', '~> 1.0.0'
 ```
 
@@ -74,8 +97,6 @@ Then run:
 ```bash
 bundle install
 ```
-
----
 
 ### From Source (Local Build)
 
@@ -86,8 +107,6 @@ gem build ipgeolocation_sdk.gemspec
 gem install ./ipgeolocation_sdk-1.0.0.gem
 ```
 
----
-
 ### From GitHub
 
 To install directly from a GitHub repository:
@@ -95,10 +114,77 @@ To install directly from a GitHub repository:
 ```ruby
 gem 'ipgeolocation_sdk', git: 'https://github.com/IPGeolocation/ip-geolocation-ruby-sdk.git'
 ```
+Then run:
 
-## Authentication
+```bash
+bundle install
+```
 
-Please follow the [installation](#installation) procedure and then run the following code:
+## API Plan Tiers and Documentation
+
+The documentation below corresponds to the four available API tier plans:
+
+- **Developer Plan** (Free): [Full Documentation](https://ipgeolocation.io/ip-location-api.html#Free)
+- **Standard Plan**: [Full Documentation](https://ipgeolocation.io/ip-location-api.html#Standard)
+- **Advance Plan**: [Full Documentation](https://ipgeolocation.io/ip-location-api.html#Advance)
+- **Security Plan**: [Full Documentation](https://ipgeolocation.io/ip-security-api.html#documentation-overview)
+
+For a detailed comparison of what each plan offers, visit the [Pricing Page](https://ipgeolocation.io/pricing.html).
+
+## API Endpoints
+
+All URIs are relative to *https://api.ipgeolocation.io/v2*
+
+| Class                                 | Method                                                                                                                                                            | HTTP request              | Description                                                             |
+|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|-------------------------------------------------------------------------|
+| *IpgeolocationSdk::IPGeolocationApi*  | [**get_ip_geolocation**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/IPLocationApi.md#get_ip_geolocation)                             | **GET** /ipgeo            | Get geolocation data for a single IP address                            |
+| *IpgeolocationSdk::IPGeolocationApi*  | [**get_bulk_ip_geolocation**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/IPLocationApi.md#get_bulk_ip_geolocation)                   | **POST** /ipgeo-bulk      | Get geolocation data for multiple IP addresses in a single API request  |
+| *IpgeolocationSdk::IPSecurityApi*     | [**get_ip_security_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/SecurityApi.md#get_ip_security_info)                           | **GET** /security         | Retrieve security threat intelligence for a single IP                   |
+| *IpgeolocationSdk::IPSecurityApi*     | [**get_bulk_ip_security_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/SecurityApi.md#get_bulk_ip_security_info)                 | **POST** /security-bulk   | Retrieve security threat intelligence for multiple IPs                  |
+| *IpgeolocationSdk::ASNLookupApi*      | [**get_asn_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/ASNLookupApi.md#get_asn_info)                                          | **GET** /asn              | Get details of any ASN number or associated IP address                  |
+| *IpgeolocationSdk::AbuseContactApi*   | [**get_abuse_contact_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AbuseContactApi.md#get_abuse_contact_info)                   | **GET** /abuse            | Retrieve abuse reporting contact information for a given IP address     |
+| *IpgeolocationSdk::AstronomyApi*      | [**get_astronomy_details**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AstronomyApi.md#get_astronomy_details)                        | **GET** /astronomy        | Get sunrise, sunset, moonrise, moonset, and related data for a location |
+| *IpgeolocationSdk::TimezoneApi*       | [**get_timezone_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimezoneApi.md#get_timezone_info)                                 | **GET** /timezone         | Timezone information details                                            |
+| *IpgeolocationSdk::TimeConversionApi* | [**convert_time_between_timezones**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimeConversionApi.md#convert_time_between_timezones) | **GET** /timezone/convert | Convert time between two specified timezones                            |
+| *IpgeolocationSdk::UserAgentApi*      | [**get_user_agent_details**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/UserAgentApi.md#get_user_agent_details)                      | **GET** /user-agent       | Get details of user-agent                                               |
+| *IpgeolocationSdk::UserAgentApi*      | [**parse_bulk_user_agent_strings**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/UserAgentApi.md#parse_bulk_user_agent_strings)        | **POST** /user-agent-bulk | Handle multiple user-agent string lookups                               |
+
+## Fields and Methods Availability
+IP Geolocation offers four plans from billing point of view: **Free, Standard, Security, Advance**. The availability of each method calling from the respective class, over all plans are presented below.
+
+| Class                                 | Method                                                                                                                                                            | Free | Standard | Security | Advance |
+|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----:|:--------:|:--------:|:-------:|
+| *IpgeolocationSdk::IPGeolocationApi*  | [**get_ip_geolocation**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/IPLocationApi.md#get_ip_geolocation)                             |  ✔   |    ✔     |    ✖     |    ✔    |
+| *IpgeolocationSdk::IPGeolocationApi*  | [**get_bulk_ip_geolocation**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/IPLocationApi.md#get_bulk_ip_geolocation)                   |  ✖   |    ✔     |    ✖     |    ✔    |
+| *IpgeolocationSdk::IPSecurityApi*     | [**get_ip_security_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/SecurityApi.md#get_ip_security_info)                           |  ✖   |    ✖     |    ✔     |    ✖    |
+| *IpgeolocationSdk::IPSecurityApi*     | [**get_bulk_ip_security_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/SecurityApi.md#get_bulk_ip_security_info)                 |  ✖   |    ✖     |    ✔     |    ✖    |
+| *IpgeolocationSdk::ASNLookupApi*      | [**get_asn_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/ASNLookupApi.md#get_asn_info)                                          |  ✖   |    ✖     |    ✖     |    ✔    |
+| *IpgeolocationSdk::AbuseContactApi*   | [**get_abuse_contact_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AbuseContactApi.md#get_abuse_contact_info)                   |  ✖   |    ✖     |    ✖     |    ✔    |
+| *IpgeolocationSdk::AstronomyApi*      | [**get_astronomy_details**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AstronomyApi.md#get_astronomy_details)                        |  ✔   |    ✔     |    ✔     |    ✔    |
+| *IpgeolocationSdk::TimezoneApi*       | [**get_timezone_info**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimezoneApi.md#get_timezone_info)                                 |  ✔   |    ✔     |    ✔     |    ✔    |
+| *IpgeolocationSdk::TimeConversionApi* | [**convert_time_between_timezones**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimeConversionApi.md#convert_time_between_timezones) |  ✔   |    ✔     |    ✔     |    ✔    |
+| *IpgeolocationSdk::UserAgentApi*      | [**get_user_agent_details**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/UserAgentApi.md#get_user_agent_details)                      |  ✔   |    ✔     |    ✔     |    ✔    |
+| *IpgeolocationSdk::UserAgentApi*      | [**parse_bulk_user_agent_strings**](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/UserAgentApi.md#parse_bulk_user_agent_strings)        |  ✖   |    ✔     |    ✔     |    ✔    |
+
+> [!TIP]
+> The availability of fields in every API endpoint across all API plans is provided in the **_Reference Table_** within each respective API Documentation. e.g., for IPGeolocationApi, please visit [https://ipgeolocation.io/ip-location-api.html#reference-to-ipgeolocation-api-response](https://ipgeolocation.io/ip-location-api.html#reference-to-ipgeolocation-api-response).
+
+## Authentication Setup
+To authenticate API requests, you need to get an API key from [ipgeolocation.io](https://ipgeolocation.io/).
+
+### How to Get Your API Key
+
+1. **Sign up** here: [https://app.ipgeolocation.io/signup](https://app.ipgeolocation.io/signup)
+2. **(optional)** Verify your email, if you signed up using email.
+3. **Log in** to your account: [https://app.ipgeolocation.io/login](https://app.ipgeolocation.io/login)
+4. After logging in, navigate to your **Dashboard** to find your API key: [https://app.ipgeolocation.io/dashboard](https://app.ipgeolocation.io/dashboard)
+
+<a id="ApiKeyAuth"></a>
+### ApiKeyAuth
+Once you've obtained the api key, configure your API client as follows:
+
+The client must configure the authentication and authorization parameters in accordance with the API server security
+policy.
 
 ```ruby
 # Load the gem
@@ -110,108 +196,204 @@ IpgeolocationSdk.configure do |config|
 end
 ```
 
-## API Endpoints
-
-All URIs are relative to *https://api.ipgeolocation.io/v2*
-
-Class | Method | HTTP request | Description
------------- | ------------- | ------------- | -------------
-*IpgeolocationSdk::ASNLookupApi* | [**get_asn_info**](docs/ASNLookupApi.md#get_asn_info) | **GET** /asn | Get details of any ASN number or associated IP address
-*IpgeolocationSdk::AbuseContactApi* | [**get_abuse_contact_info**](docs/AbuseContactApi.md#get_abuse_contact_info) | **GET** /abuse | Retrieve abuse reporting contact information for a given IP address
-*IpgeolocationSdk::AstronomyApi* | [**get_astronomy_details**](docs/AstronomyApi.md#get_astronomy_details) | **GET** /astronomy | Get sunrise, sunset, moonrise, moonset, and related data for a location
-*IpgeolocationSdk::IPGeolocationApi* | [**get_bulk_ip_geolocation**](docs/IPLocationApi.md#get_bulk_ip_geolocation) | **POST** /ipgeo-bulk | Get geolocation data for multiple IP addresses in a single API request
-*IpgeolocationSdk::IPGeolocationApi* | [**get_ip_geolocation**](docs/IPLocationApi.md#get_ip_geolocation) | **GET** /ipgeo | Get geolocation data for a single IP address
-*IpgeolocationSdk::IPSecurityApi* | [**get_bulk_ip_security_info**](docs/SecurityApi.md#get_bulk_ip_security_info) | **POST** /security-bulk | Retrieve security threat intelligence for multiple IPs
-*IpgeolocationSdk::IPSecurityApi* | [**get_ip_security_info**](docs/SecurityApi.md#get_ip_security_info) | **GET** /security |  Retrieve security threat intelligence for a single IP
-*IpgeolocationSdk::TimeConversionApi* | [**convert_time_between_timezones**](docs/TimeConversionApi.md#convert_time_between_timezones) | **GET** /timezone/convert |  Convert time between two specified timezones
-*IpgeolocationSdk::TimezoneApi* | [**get_timezone_info**](docs/TimezoneApi.md#get_timezone_info) | **GET** /timezone | Timezone information details
-*IpgeolocationSdk::UserAgentApi* | [**get_user_agent_details**](docs/UserAgentApi.md#get_user_agent_details) | **GET** /user-agent | Get details of user-agent
-*IpgeolocationSdk::UserAgentApi* | [**parse_bulk_user_agent_strings**](docs/UserAgentApi.md#parse_bulk_user_agent_strings) | **POST** /user-agent-bulk | Handle multiple user-agent string lookups
-
-
-# Example Usage
-
-## IP Geolocation Examples
-
-This section provides usage examples of the `get_ip_geolocation()` method from the SDK across Free, Standard, and Advanced subscription tiers. Each example highlights different combinations of parameters: `fields`, `include`, and `excludes`.
-
-### Parameters
-
-#### `fields`
-Use this parameter to include specific fields in the response.
-
-#### `excludes`
-Use this parameter to omit specific fields from the response.
-
-#### `include`
-Use this parameter to add optional modules to the response, such as:
-- `security`
-- `user_agent`
-- `hostname`
-- `liveHostname`
-- `hostnameFallbackLive`
-- `abuse`
-- `dma`
-- `timezone`
-
-
-For complete details, refer to the official documentation: [IP Geolocation API Documentation](https://ipgeolocation.io/ip-location-api.html#documentation-overview)
-
-The `ip` parameter in the SDK can accept any valid IPv4 address, IPv6 address, or domain name. If the `ip()` method is not used or the parameter is omitted, the API will return information about the public IP address of the device or server where the SDK is executed.
-
-
-### 1. Developer (Free) Plan Examples
-#### Default Fields
-
+## Accessing API response fields
+The response returned by the library can be accessed in the following ways:
+### Access a specific field
 ```ruby
-get_geolocation_opts = {
-  ip: "8.8.8.8"
-}
-geolocation_instance = IpgeolocationSdk::IPGeolocationApi.new
-begin 
-    result = geolocation_instance.get_ip_geolocation(get_geolocation_opts)
-    p result
+require 'ipgeolocation_sdk'
+
+IpgeolocationSdk.configure do |config|
+   config.api_key['apiKey'] = 'YOUR API KEY'
+end
+
+geo = IpgeolocationSdk::IPGeolocationApi.new
+begin
+   opts = { ip: "8.8.8.8"}
+   result = geo.get_ip_geolocation(opts)
+   
+   # Get specific field from response with dot separated path 
+   puts "IP: #{result.ip}"
+   puts "Country: #{result.location.country_name}"
+   puts "City: #{result.location.city}"
+   puts "Currency name: #{result.currency.name}"
 rescue IpgeolocationSdk::ApiError => e
-    puts "Error calling GeolocationApi: #{e}"
+   puts "API Error: #{e}"
 end
 ```
 Sample Response:
+```text
+IP: 8.8.8.8
+Country: United States
+City: Mountain View
+Currency name: US Dollar
 ```
-class GeolocationResponse {
-    ip: 8.8.8.8
-    location: class Location {
-        continentCode: NA
-        continentName: North America
-        countryCode2: US
-        countryCode3: USA
-        countryName: United States
-        countryNameOfficial: United States of America
-        countryCapital: Washington, D.C.
-        stateProv: California
-        stateCode: US-CA
-        district: Santa Clara
-        city: Mountain View
-        zipcode: 94043-1351
-        latitude: 37.42240
-        longitude: -122.08421
-        isEu: false
-        countryFlag: https://ipgeolocation.io/static/flags/us_64.png
-        geonameId: 6301403
-        countryEmoji: 🇺🇸
-    }
-    countryMetadata: class CountryMetadata {
-        callingCode: +1
-        tld: .us
-        languages: [en-US, es-US, haw, fr]
-    }
-    currency: class Currency {
-        code: USD
-        name: US Dollar
-        symbol: $
-    }
+
+### Get JSON response
+To get the JSON response in a pretty formatted way:
+```ruby
+require 'ipgeolocation_sdk'
+
+IpgeolocationSdk.configure do |config|
+   config.api_key['apiKey'] = 'YOUR API KEY'
+end
+
+geo = IpgeolocationSdk::IPGeolocationApi.new
+
+begin
+   opts = { ip: "8.8.8.8"}
+   result = geo.get_ip_geolocation(opts)
+   
+   # Get pretty JSON response proper formatted
+   puts JSON.pretty_generate(result.to_hash)
+rescue IpgeolocationSdk::ApiError => e
+   puts "API Error: #{e}"
+end
+```
+
+Or without the `JSON` module
+```ruby
+require 'ipgeolocation_sdk'
+
+IpgeolocationSdk.configure do |config|
+   config.api_key['apiKey'] = 'YOUR API KEY'
+end
+
+geo = IpgeolocationSdk::IPGeolocationApi.new
+
+begin
+   opts = { ip: "8.8.8.8"}
+   result = geo.get_ip_geolocation(opts)
+   
+   # Use sdk's to_json method instead
+   puts result.to_hash.to_json
+rescue IpgeolocationSdk::ApiError => e
+   puts "API Error: #{e}"
+end
+```
+Sample Response:
+
+```json
+{
+   "ip": "8.8.8.8",
+   "location": {
+      "continent_code": "NA",
+      "continent_name": "North America",
+      "country_code2": "US",
+      "country_code3": "USA",
+      "country_name": "United States",
+      "country_name_official": "United States of America",
+      "country_capital": "Washington, D.C.",
+      "state_prov": "California",
+      "state_code": "US-CA",
+      "district": "Santa Clara",
+      "city": "Mountain View",
+      "zipcode": "94043-1351",
+      "latitude": "37.42240",
+      "longitude": "-122.08421",
+      "is_eu": false,
+      "country_flag": "https://ipgeolocation.io/static/flags/us_64.png",
+      "geoname_id": "6301403",
+      "country_emoji": "🇺🇸"
+   },
+   "country_metadata": {
+      "calling_code": "+1",
+      "tld": ".us",
+      "languages": [
+         "en-US",
+         "es-US",
+         "haw",
+         "fr"
+      ]
+   },
+   "currency": {
+      "code": "USD",
+      "name": "US Dollar",
+      "symbol": "$"
+   }
 }
 ```
-Filtering Specific Fields from the Response (Use of 'exclude' and 'fields')
+
+## IP Geolocation Examples
+This section provides usage examples of the `get_ip_geolocation()` method from the SDK across Free, Standard, and Advanced subscription tiers. Each example highlights different combinations of parameters: `fields`, `include`, and `excludes`.
+
+**Parameters**
+
+- `fields`: Use this parameter to include specific fields in the response.
+
+- `excludes`: Use this parameter to omit specific fields from the response.
+
+- `include`: Use this parameter to add optional modules to the response, such as:
+  - `security`
+  - `user_agent`
+  - `hostname`
+  - `liveHostname`
+  - `hostnameFallbackLive`
+  - `abuse`
+  - `dma`
+  - `time_zone`
+
+For complete details, refer to the official documentation: [IP Geolocation API Documentation](https://ipgeolocation.io/ip-location-api.html#documentation-overview)
+
+The `ip` parameter in the SDK can accept any valid IPv4 address, IPv6 address, or domain name. If the `ip` option is not used or the parameter is omitted, the library will return information about the public IP address of the device or server where the library is executed.
+
+
+### Developer Plan Examples
+#### Get Default Fields
+```ruby
+geolocation_instance = IpgeolocationSdk::IPGeolocationApi.new
+begin
+   get_geolocation_opts = { 
+      ip: "8.8.8.8"
+   }
+   result = geolocation_instance.get_ip_geolocation(get_geolocation_opts)
+   puts result.to_hash.to_json
+rescue IpgeolocationSdk::ApiError => e
+   puts "Error calling GeolocationApi: #{e}"
+end
+```
+Sample Response:
+
+```json
+{
+   "ip": "8.8.8.8",
+   "location": {
+      "continent_code": "NA",
+      "continent_name": "North America",
+      "country_code2": "US",
+      "country_code3": "USA",
+      "country_name": "United States",
+      "country_name_official": "United States of America",
+      "country_capital": "Washington, D.C.",
+      "state_prov": "California",
+      "state_code": "US-CA",
+      "district": "Santa Clara",
+      "city": "Mountain View",
+      "zipcode": "94043-1351",
+      "latitude": "37.42240",
+      "longitude": "-122.08421",
+      "is_eu": false,
+      "country_flag": "https://ipgeolocation.io/static/flags/us_64.png",
+      "geoname_id": "6301403",
+      "country_emoji": "🇺🇸"
+   },
+   "country_metadata": {
+      "calling_code": "+1",
+      "tld": ".us",
+      "languages": [
+         "en-US",
+         "es-US",
+         "haw",
+         "fr"
+      ]
+   },
+   "currency": {
+      "code": "USD",
+      "name": "US Dollar",
+      "symbol": "$"
+   }
+}
+```
+Filtering Specific Fields from the Response (Use of `exclude` and `fields`)
 ```ruby
 get_geolocation_opts = {
   ip: "8.8.4.4",
@@ -221,38 +403,37 @@ get_geolocation_opts = {
 geolocation_instance = IpgeolocationSdk::IPGeolocationApi.new
 begin 
     result = geolocation_instance.get_ip_geolocation(get_geolocation_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling GeolocationApi: #{e}"
 end
 ```
-Sample Response
-```
-class GeolocationResponse {
-    ip: 8.8.4.4
-    location: class Location {
-        countryCode2: US
-        countryCode3: USA
-        countryName: United States
-        countryNameOfficial: United States of America
-        countryCapital: Washington, D.C.
-        stateProv: California
-        stateCode: US-CA
-        district: Santa Clara
-        city: Mountain View
-        zipcode: 94043-1351
-        latitude: 37.42240
-        longitude: -122.08421
-        isEu: false
-        countryFlag: https://ipgeolocation.io/static/flags/us_64.png
-        geonameId: 6301403
-        countryEmoji: 🇺🇸
-    }
+Sample Response:
+```json
+{
+   "ip": "8.8.4.4",
+   "location": {
+      "country_code2": "US",
+      "country_code3": "USA",
+      "country_name": "United States",
+      "country_name_official": "United States of America",
+      "country_capital": "Washington, D.C.",
+      "state_prov": "California",
+      "state_code": "US-CA",
+      "district": "Santa Clara",
+      "city": "Mountain View",
+      "zipcode": "94043-1351",
+      "latitude": "37.42240",
+      "longitude": "-122.08421",
+      "is_eu": false,
+      "country_flag": "https://ipgeolocation.io/static/flags/us_64.png",
+      "geoname_id": "6301403",
+      "country_emoji": "🇺🇸"
+   }
 }
 ```
-### 2. Standard Plan Examples
-#### Default Fields
-
+### Standard Plan Examples
+#### Get Standard plan default Fields
 ```ruby
 get_geolocation_opts = {
   ip: "8.8.8.8"
@@ -260,58 +441,63 @@ get_geolocation_opts = {
 geolocation_instance = IpgeolocationSdk::IPGeolocationApi.new
 begin 
     result = geolocation_instance.get_ip_geolocation(get_geolocation_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling GeolocationApi: #{e}"
 end
 ```
 Sample Response:
-```
-class GeolocationResponse {
-    ip: 8.8.8.8
-    location: class Location {
-        continentCode: NA
-        continentName: North America
-        countryCode2: US
-        countryCode3: USA
-        countryName: United States
-        countryNameOfficial: United States of America
-        countryCapital: Washington, D.C.
-        stateProv: California
-        stateCode: US-CA
-        district: Santa Clara
-        city: Mountain View
-        zipcode: 94043-1351
-        latitude: 37.42240
-        longitude: -122.08421
-        isEu: false
-        countryFlag: https://ipgeolocation.io/static/flags/us_64.png
-        geonameId: 6301403
-        countryEmoji: 🇺🇸
-    }
-    countryMetadata: class CountryMetadata {
-        callingCode: +1
-        tld: .us
-        languages: [en-US, es-US, haw, fr]
-    }
-    network: class Network {
-        asn: class NetworkAsn {
-            asNumber: AS15169
-            organization: Google LLC
-            country: US
-        }
-        company: class NetworkCompany {
-            name: Google LLC
-        }
-    }
-    currency: class Currency {
-        code: USD
-        name: US Dollar
-        symbol: $
-    }
+```json
+{
+   "ip": "8.8.8.8",
+   "location": {
+      "continent_code": "NA",
+      "continent_name": "North America",
+      "country_code2": "US",
+      "country_code3": "USA",
+      "country_name": "United States",
+      "country_name_official": "United States of America",
+      "country_capital": "Washington, D.C.",
+      "state_prov": "California",
+      "state_code": "US-CA",
+      "district": "Santa Clara",
+      "city": "Mountain View",
+      "zipcode": "94043-1351",
+      "latitude": "37.42240",
+      "longitude": "-122.08421",
+      "is_eu": false,
+      "country_flag": "https://ipgeolocation.io/static/flags/us_64.png",
+      "geoname_id": "6301403",
+      "country_emoji": "🇺🇸"
+   },
+   "country_metadata": {
+      "calling_code": "+1",
+      "tld": ".us",
+      "languages": [
+         "en-US",
+         "es-US",
+         "haw",
+         "fr"
+      ]
+   },
+   "network": {
+      "asn": {
+         "as_number": "AS15169",
+         "organization": "Google LLC",
+         "country": "US"
+      },
+      "company": {
+         "name": "Google LLC"
+      }
+   },
+   "currency": {
+      "code": "USD",
+      "name": "US Dollar",
+      "symbol": "$"
+   }
 }
 ```
-### Retrieving Geolocation Data in Multiple Languages
+#### Retrieving Geolocation Data in Multiple Languages
 Here is an example to get the geolocation data for IP address '2001:4230:4890::1' in French language:
 ```ruby
 get_geolocation_opts = {
@@ -321,56 +507,59 @@ get_geolocation_opts = {
 geolocation_instance = IpgeolocationSdk::IPGeolocationApi.new
 begin 
     result = geolocation_instance.get_ip_geolocation(get_geolocation_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling GeolocationApi: #{e}"
 end
 ```
-
 Sample Response
-```
-class GeolocationResponse {
-    ip: 2001:4230:4890:0:0:0:0:1
-    location: class Location {
-        continentCode: AF
-        continentName: Afrique
-        countryCode2: MU
-        countryCode3: MUS
-        countryName: Maurice
-        countryNameOfficial: 
-        countryCapital: Port Louis
-        stateProv: Wilhems des plaines
-        stateCode: MU-PW
-        district: Quatre Bornes
-        city: Quatre Bornes
-        zipcode: 72201
-        latitude: -20.24304
-        longitude: 57.49631
-        isEu: false
-        countryFlag: https://ipgeolocation.io/static/flags/mu_64.png
-        geonameId: 1106777
-        countryEmoji: 🇲🇺
+```json
+{
+  "ip": "2001:4230:4890:0:0:0:0:1",
+  "location": {
+    "continent_code": "AF",
+    "continent_name": "Afrique",
+    "country_code2": "MU",
+    "country_code3": "MUS",
+    "country_name": "Maurice",
+    "country_name_official": "",
+    "country_capital": "Port Louis",
+    "state_prov": "Wilhems des plaines",
+    "state_code": "MU-PW",
+    "district": "Quatre Bornes",
+    "city": "Quatre Bornes",
+    "zipcode": "72201",
+    "latitude": "-20.24304",
+    "longitude": "57.49631",
+    "is_eu": false,
+    "country_flag": "https://ipgeolocation.io/static/flags/mu_64.png",
+    "geoname_id": "1106777",
+    "country_emoji": "🇲🇺"
+  },
+  "country_metadata": {
+    "calling_code": "+230",
+    "tld": ".mu",
+    "languages": [
+      "en-MU",
+      "bho",
+      "fr"
+    ]
+  },
+  "network": {
+    "asn": {
+      "as_number": "AS52095",
+      "organization": "Netassist International s.r.o.",
+      "country": "CZ"
+    },
+    "company": {
+      "name": "African Network Information Center AfriNIC Ltd"
     }
-    countryMetadata: class CountryMetadata {
-        callingCode: +230
-        tld: .mu
-        languages: [en-MU, bho, fr]
-    }
-    network: class Network {
-        asn: class NetworkAsn {
-            asNumber: AS0
-            organization: 
-            country:
-        }
-        company: class NetworkCompany {
-            name: African Network Information Center AfriNIC Ltd
-        }
-    }
-    currency: class Currency {
-        code: MUR
-        name: Mauritius Rupee
-        symbol: ₨
-    }
+  },
+  "currency": {
+    "code": "MUR",
+    "name": "Mauritius Rupee",
+    "symbol": "₨"
+  }
 }
 ```
 
@@ -383,83 +572,124 @@ get_geolocation_opts = {
 geolocation_instance = IpgeolocationSdk::IPGeolocationApi.new
 begin 
     result = geolocation_instance.get_ip_geolocation(get_geolocation_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling GeolocationApi: #{e}"
 end
 ```
 Sample Response
-```
-class GeolocationResponse {
-    ip: 4.5.6.7
-    hostname: 4.5.6.7
-    location: class Location {
-        countryName: United States
-        countryCapital: Washington, D.C.
+```json
+{
+  "ip": "4.5.6.7",
+  "hostname": "4.5.6.7",
+  "location": {
+    "continent_code": "NA",
+    "continent_name": "North America",
+    "country_code2": "US",
+    "country_code3": "USA",
+    "country_name": "United States",
+    "country_name_official": "United States of America",
+    "country_capital": "Washington, D.C.",
+    "state_prov": "Louisiana",
+    "state_code": "US-LA",
+    "district": "Ouachita",
+    "city": "Monroe",
+    "zipcode": "71203-2041",
+    "latitude": "32.58997",
+    "longitude": "-92.06862",
+    "is_eu": false,
+    "country_flag": "https://ipgeolocation.io/static/flags/us_64.png",
+    "geoname_id": "4343811",
+    "country_emoji": "🇺🇸"
+  },
+  "country_metadata": {
+    "calling_code": "+1",
+    "tld": ".us",
+    "languages": [
+      "en-US",
+      "es-US",
+      "haw",
+      "fr"
+    ]
+  },
+  "network": {
+    "asn": {
+      "as_number": "AS3356",
+      "organization": "Level 3 Parent, LLC",
+      "country": "US"
+    },
+    "company": {
+      "name": "Level 3 Parent, LLC"
     }
-    timeZone: class TimeZone {
-        name: America/Chicago
-        offset: -6
-        offsetWithDst: -5
-        currentTime: 2025-05-28 06:52:16.748-0500
-        currentTimeUnix: 1748433136.748
-        isDst: true
-        dstSavings: 1
-        dstExists: true
-        dstStart: class TimeZoneDstStart {
-            utcTime: 2025-03-09 TIME 08
-            duration: +1H
-            gap: true
-            dateTimeAfter: 2025-03-09 TIME 03
-            dateTimeBefore: 2025-03-09 TIME 02
-            overlap: false
-        }
-        dstEnd: class TimeZoneDstEnd {
-            utcTime: 2025-11-02 TIME 07
-            duration: -1H
-            gap: false
-            dateTimeAfter: 2025-11-02 TIME 01
-            dateTimeBefore: 2025-11-02 TIME 02
-            overlap: true
-        }
+  },
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "symbol": "$"
+  },
+  "time_zone": {
+    "name": "America/Chicago",
+    "offset": -6,
+    "offset_with_dst": -6,
+    "current_time": "2025-12-24 01:54:01.954-0600",
+    "current_time_unix": 1766562841.954,
+    "is_dst": false,
+    "dst_savings": 0,
+    "dst_exists": true,
+    "dst_start": {
+      "utc_time": "2025-03-09 TIME 08",
+      "duration": "+1H",
+      "gap": true,
+      "date_time_after": "2025-03-09 TIME 03",
+      "date_time_before": "2025-03-09 TIME 02",
+      "overlap": false
+    },
+    "dst_end": {
+      "utc_time": "2025-11-02 TIME 07",
+      "duration": "-1H",
+      "gap": false,
+      "date_time_after": "2025-11-02 TIME 01",
+      "date_time_before": "2025-11-02 TIME 02",
+      "overlap": true
     }
-    userAgent: class UserAgentData {
-        userAgentString: IPGeolocation/2.0.0/java
-        name: IPGeolocation Java SDK
-        type: Special
-        version: 2.0.0
-        versionMajor: 1
-        device: class UserAgentDataDevice {
-            name: Unknown
-            type: Unknown
-            brand: Unknown
-            cpu: Unknown
-        }
-        engine: class UserAgentDataEngine {
-            name: Unknown
-            type: Unknown
-            version: ??
-            versionMajor: ??
-        }
-        operatingSystem: class UserAgentDataOperatingSystem {
-            name: Unknown
-            type: Unknown
-            version: ??
-            versionMajor: ??
-            build: ??
-        }
+  },
+  "user_agent": {
+    "user_agent_string": "OpenAPI-Generator/1.0.0/ruby",
+    "name": "OpenAPI-Generator",
+    "type": "Special",
+    "version": "1.0.0",
+    "version_major": "1",
+    "device": {
+      "name": "Unknown",
+      "type": "Unknown",
+      "brand": "Unknown",
+      "cpu": "Unknown"
+    },
+    "engine": {
+      "name": "Unknown",
+      "type": "Unknown",
+      "version": "??",
+      "version_major": "??"
+    },
+    "operating_system": {
+      "name": "Unknown",
+      "type": "Unknown",
+      "version": "??",
+      "version_major": "??",
+      "build": "??"
     }
+  }
 }
 ```
-**Note on Hostname Parameters**
+> [!NOTE]
+>
+> The IP Geolocation API supports hostname lookup for all paid subscriptions. However, this is not included by default. To enable hostname resolution, use the `include` parameter with one of the following options:
+>
+> - `hostname`: Performs a quick lookup using the internal hostname database. If no match is found, the IP is returned as-is. This is fast but may produce incomplete results.
+> - `liveHostname`: Queries live sources for accurate hostname resolution. This may increase response time.
+> - `hostnameFallbackLive`: Attempts the internal database first, and falls back to live sources if no result is found. This option provides a balance of speed and reliability.
 
-The IP Geolocation API supports hostname lookup for all paid subscriptions. However, this is not included by default. To enable hostname resolution, use the `include` parameter with one of the following options:
-
-- `hostname`: Performs a quick lookup using the internal hostname database. If no match is found, the IP is returned as-is. This is fast but may produce incomplete results.
-- `liveHostname`: Queries live sources for accurate hostname resolution. This may increase response time.
-- `hostnameFallbackLive`: Attempts the internal database first, and falls back to live sources if no result is found. This option provides a balance of speed and reliability.
-
-### 3. Advanced Plan Examples
+### Advanced Plan Examples
 #### Include DMA, Abuse and Security
 
 ```ruby
@@ -471,105 +701,109 @@ get_geolocation_opts = {
 geolocation_instance = IpgeolocationSdk::IPGeolocationApi.new
 begin 
     result = geolocation_instance.get_ip_geolocation(get_geolocation_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling GeolocationApi: #{e}"
 end
 ```
 Sample Response:
-```
-class GeolocationResponse {
-    ip: 8.8.8.8
-    location: class Location {
-        continentCode: NA
-        continentName: North America
-        countryCode2: US
-        countryCode3: USA
-        countryName: United States
-        countryNameOfficial: United States of America
-        countryCapital: Washington, D.C.
-        stateProv: California
-        stateCode: US-CA
-        district: Santa Clara
-        city: Mountain View
-        zipcode: 94043-1351
-        latitude: 37.42240
-        longitude: -122.08421
-        isEu: false
-        countryFlag: null
-        geonameId: 6301403
-        countryEmoji: null
-        accuracyRadius: 
-        locality: Mountain View
-        dmaCode: 807
+```json
+{
+  "ip": "8.8.8.8",
+  "location": {
+    "continent_code": "NA",
+    "continent_name": "North America",
+    "country_code2": "US",
+    "country_code3": "USA",
+    "country_name": "United States",
+    "country_name_official": "United States of America",
+    "country_capital": "Washington, D.C.",
+    "state_prov": "California",
+    "state_code": "US-CA",
+    "district": "Santa Clara",
+    "city": "Mountain View",
+    "zipcode": "94043-1351",
+    "latitude": "37.42240",
+    "longitude": "-122.08421",
+    "is_eu": false,
+    "geoname_id": "6301403",
+    "accuracy_radius": "21.485",
+    "locality": "Mountain View",
+    "dma_code": "807"
+  },
+  "country_metadata": {
+    "calling_code": "+1",
+    "tld": ".us",
+    "languages": [
+      "en-US",
+      "es-US",
+      "haw",
+      "fr"
+    ]
+  },
+  "network": {
+    "asn": {
+      "as_number": "AS15169",
+      "organization": "Google LLC",
+      "country": "US",
+      "asn_name": "GOOGLE",
+      "type": "BUSINESS",
+      "domain": "google.com",
+      "date_allocated": "2012-02-24T00:00",
+      "allocation_status": "",
+      "num_of_ipv4_routes": "1008",
+      "num_of_ipv6_routes": "136",
+      "rir": "ARIN"
+    },
+    "connection_type": "",
+    "company": {
+      "name": "Google LLC",
+      "type": "Hosting",
+      "domain": "google.com"
     }
-    countryMetadata: class CountryMetadata {
-        callingCode: +1
-        tld: .us
-        languages: [en-US, es-US, haw, fr]
-    }
-    network: class Network {
-        asn: class NetworkAsn {
-            asNumber: AS15169
-            organization: Google LLC
-            country: US
-            asnName: GOOGLE
-            type: BUSINESS
-            domain: about.google
-            dateAllocated: 
-            allocationStatus: assigned
-            numOfIpv4Routes: 965
-            numOfIpv6Routes: 104
-            rir: ARIN
-        }
-        connectionType: 
-        company: class NetworkCompany {
-            name: Google LLC
-            type: Business
-            domain: googlellc.com
-        }
-    }
-    currency: class Currency {
-        code: USD
-        name: US Dollar
-        symbol: $
-    }
-    security: class Security {
-        threatScore: 0
-        isTor: false
-        isProxy: false
-        proxyType: 
-        proxyProvider: 
-        isAnonymous: false
-        isKnownAttacker: false
-        isSpam: false
-        isBot: false
-        isCloudProvider: false
-        cloudProvider: 
-    }
-    abuse: class Abuse {
-        route: 8.8.8.0/24
-        country: 
-        handle: ABUSE5250-ARIN
-        name: Abuse
-        organization: Abuse
-        role: abuse
-        kind: group
-        address: 1600 Amphitheatre Parkway
-        Mountain View
-        CA
-        94043
-        United States
-        emails: [network-abuse@google.com]
-        phoneNumbers: [+1-650-253-0000]
-    }
+  },
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "symbol": "$"
+  },
+  "security": {
+    "threat_score": 0,
+    "is_tor": false,
+    "is_proxy": false,
+    "proxy_type": "",
+    "proxy_provider": "",
+    "is_anonymous": false,
+    "is_known_attacker": false,
+    "is_spam": false,
+    "is_bot": false,
+    "is_cloud_provider": false,
+    "cloud_provider": ""
+  },
+  "abuse": {
+    "route": "8.8.8.0/24",
+    "country": "",
+    "handle": "ABUSE5250-ARIN",
+    "name": "Abuse",
+    "organization": "Abuse",
+    "role": "abuse",
+    "kind": "group",
+    "address": "1600 Amphitheatre Parkway\nMountain View\nCA\n94043\nUnited States",
+    "emails": [
+      "network-abuse@google.com"
+    ],
+    "phone_numbers": [
+      "+1-650-253-0000"
+    ]
+  }
 }
 ```
 These examples demonstrate typical usage of the IP Geolocation API with different subscription tiers. Use `fields` to specify exactly which data to receive, `include` for optional data like security and user agent, and `excludes` to omit specific keys from the response.
 
-**Note:** All features available in the Free plan are also included in the Standard and Advanced plans. Similarly, all features of the Standard plan are available in the Advanced plan.
+> [!NOTE]
+> All features available in the Free plan are also included in the Standard and Advanced plans. Similarly, all features of the Standard plan are available in the Advanced plan.
 
-## Bulk IP Geolocation Example
+### Bulk IP Geolocation Example
 The SDK also supports bulk IP geolocation requests using the `get_bulk_ip_geolocation()` method. All parameters like `fields`, `include`, and `excludes` can also be used in bulk requests.
 
 ```ruby
@@ -599,9 +833,7 @@ This section provides usage examples of the `get_ip_security_info()` method from
 
 For full API specifications, refer to the [official IP Security API documentation](https://ipgeolocation.io/ip-security-api.html#documentation-overview).
 
----
-
-### Basic Request (Minimal Setup)
+### Get Default Security Fields
 
 ```ruby
 get_ip_security_opts = {
@@ -610,29 +842,29 @@ get_ip_security_opts = {
 security_instance = IpgeolocationSdk::IPSecurityApi.new
 begin 
     result = security_instance.get_ip_security_info(get_ip_security_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling GeolocationApi: #{e}"
 end
 ```
 
 Sample Response
-```
-class SecurityAPIResponse {
-    ip: 2.56.188.34
-    security: class Security {
-        threatScore: 80
-        isTor: false
-        isProxy: true
-        proxyType: VPN
-        proxyProvider: Nord VPN
-        isAnonymous: true
-        isKnownAttacker: true
-        isSpam: false
-        isBot: false
-        isCloudProvider: true
-        cloudProvider: Packethub S.A.
-    }
+```json
+{
+  "ip": "2.56.188.34",
+  "security": {
+    "threat_score": 80,
+    "is_tor": false,
+    "is_proxy": true,
+    "proxy_type": "PROXY",
+    "proxy_provider": "Zyte Proxy",
+    "is_anonymous": true,
+    "is_known_attacker": true,
+    "is_spam": false,
+    "is_bot": false,
+    "is_cloud_provider": false,
+    "cloud_provider": ""
+  }
 }
 ```
 ### Include Multiple Optional Fields
@@ -644,124 +876,15 @@ get_ip_security_opts = {
 security_instance = IpgeolocationSdk::IPSecurityApi.new
 begin 
     result = security_instance.get_ip_security_info(get_ip_security_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling GeolocationApi: #{e}"
 end
 ```
 
-Sample Response
-```
-class SecurityAPIResponse {
-    ip: 2.56.188.34
-    hostname: 2.56.188.34
-    security: class Security {
-        threatScore: 80
-        isTor: false
-        isProxy: true
-        proxyType: VPN
-        proxyProvider: Nord VPN
-        isAnonymous: true
-        isKnownAttacker: true
-        isSpam: false
-        isBot: false
-        isCloudProvider: true
-        cloudProvider: Packethub S.A.
-    }
-    location: class LocationMinimal {
-        continentCode: NA
-        continentName: North America
-        countryCode2: US
-        countryCode3: USA
-        countryName: United States
-        countryNameOfficial: United States of America
-        countryCapital: Washington, D.C.
-        stateProv: Texas
-        stateCode: US-TX
-        district: Dallas County
-        city: Dallas
-        zipcode: 75207
-        latitude: 32.78916
-        longitude: -96.82170
-        isEu: false
-        countryFlag: https://ipgeolocation.io/static/flags/us_64.png
-        geonameId: 7181768
-        countryEmoji: 🇺🇸
-    }
-    network: class NetworkMinimal {
-        asn: class NetworkMinimalAsn {
-            asNumber: AS62240
-            organization: Clouvider Limited
-            country: GB
-        }
-        company: class NetworkMinimalCompany {
-            name: Packethub S.A.
-        }
-    }
-    timeZone: class TimeZone {
-        name: America/Chicago
-        offset: -6
-        offsetWithDst: -5
-        currentTime: 2025-05-29 08:27:44.939-0500
-        currentTimeUnix: 1748525264.939
-        isDst: true
-        dstSavings: 1
-        dstExists: true
-        dstStart: class TimeZoneDstStart {
-            utcTime: 2025-03-09 TIME 08
-            duration: +1H
-            gap: true
-            dateTimeAfter: 2025-03-09 TIME 03
-            dateTimeBefore: 2025-03-09 TIME 02
-            overlap: false
-        }
-        dstEnd: class TimeZoneDstEnd {
-            utcTime: 2025-11-02 TIME 07
-            duration: -1H
-            gap: false
-            dateTimeAfter: 2025-11-02 TIME 01
-            dateTimeBefore: 2025-11-02 TIME 02
-            overlap: true
-        }
-    }
-    userAgent: class UserAgentData {
-        userAgentString: IPGeolocation/2.0.0/java
-        name: IPGeolocation Java SDK
-        type: Special
-        version: 2.0.0
-        versionMajor: 1
-        device: class UserAgentDataDevice {
-            name: Unknown
-            type: Unknown
-            brand: Unknown
-            cpu: Unknown
-        }
-        engine: class UserAgentDataEngine {
-            name: Unknown
-            type: Unknown
-            version: ??
-            versionMajor: ??
-        }
-        operatingSystem: class UserAgentDataOperatingSystem {
-            name: Unknown
-            type: Unknown
-            version: ??
-            versionMajor: ??
-            build: ??
-        }
-    }
-    countryMetadata: class CountryMetadata {
-        callingCode: +1
-        tld: .us
-        languages: [en-US, es-US, haw, fr]
-    }
-    currency: class Currency {
-        code: USD
-        name: US Dollar
-        symbol: $
-    }
-}
-```
+> [!NOTE]
+> You can get all the available fields in standard plan in combination with security data, when subscribed to security plan.
+
 ### Request with Field Filtering
 
 ```ruby
@@ -772,25 +895,24 @@ get_ip_security_opts = {
 security_instance = IpgeolocationSdk::IPSecurityApi.new
 begin 
     result = security_instance.get_ip_security_info(get_ip_security_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling SecurityApi: #{e}"
 end
 ```
 Sample Response
-```
-class SecurityAPIResponse {
-    ip: 195.154.221.54
-    security: class Security {
-        isTor: false
-        isProxy: true
-        isSpam: false
-        isBot: false
-    }
+```json
+{
+  "ip": "195.154.221.54",
+  "security": {
+    "is_tor": false,
+    "is_proxy": true,
+    "is_spam": false,
+    "is_bot": false
+  }
 }
-
 ```
-## Bulk IP Security Request
+### Bulk IP Security Request
 The SDK also supports bulk IP Security requests using the `get_bulk_ip_security_info()` method. All parameters like `fields`, `include`, and `excludes` can also be used in bulk requests.
 
 ```ruby
@@ -800,24 +922,27 @@ post_ip_security_opts = {
   fields: "security.threat_score,location.country_name"
 }
 
-security_instance = IpgeolocationSdk::IPSecurityAPI.new
-begin 
-    result = security_instance.get_bulk_ip_security_info(post_ip_security_opts)
-    result.each do |item|
-        if IpgeolocationSdk::BulkIPSecurity.is_success?(item) # SecurityAPIResponse
-            p item.ip
-        elsif IpgeolocationSdk::BulkIPSecurity.is_error?(item) # ErrorResponse
-            p item.message
-        end
+security_instance = IpgeolocationSdk::IPSecurityApi.new
+begin
+  result = security_instance.get_bulk_ip_security_info(post_ip_security_opts)
+  result.each do |item|
+    if IpgeolocationSdk::BulkIPSecurity.is_success?(item) # SecurityAPIResponse
+      p item.security.threat_score
+    elsif IpgeolocationSdk::BulkIPSecurity.is_error?(item) # ErrorResponse
+      p item.message
     end
+  end
 rescue IpgeolocationSdk::ApiError => e
-    puts "Error calling SecurityApi: #{e}"
+  puts "Error calling SecurityApi: #{e}"
 end
 ```
 
 ## ASN API Examples
 
-This section provides usage examples of the `get_asn_info()` method from the SDK. These methods allow developers to retrieve detailed ASN-level network data either by ASN number or by IP address. Note that ASN API is only available in the Advanced subscription plans.
+This section provides usage examples of the `get_asn_info()` method from the SDK. These methods allow developers to retrieve detailed ASN-level network data either by ASN number or by IP address.
+
+> [!NOTE]
+> ASN API is only available in the Advanced Plan.
 
 Refer to the [ASN API documentation](https://ipgeolocation.io/asn-api.html#documentation-overview) for a detailed list of supported fields and behaviors.
 
@@ -830,29 +955,28 @@ asn_opts = {
 asn_instance = IpgeolocationSdk::ASNLookupApi.new
 begin
   result = asn_instance.get_asn_info(asn_opts)
-  p result
+  puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
   puts "Error calling ASNLookupApi: #{e}"
 end
-
 ```
 Sample Response
-```
-class ASNResponse {
-    ip: 8.8.8.8
-    asn: class ASNDetails {
-        asNumber: AS15169
-        organization: Google LLC
-        country: US
-        asnName: GOOGLE
-        type: BUSINESS
-        domain: about.google
-        dateAllocated: 
-        allocationStatus: assigned
-        numOfIpv4Routes: 983
-        numOfIpv6Routes: 104
-        rir: ARIN
-    }
+```json
+{
+  "ip": "8.8.8.8",
+  "asn": {
+    "as_number": "AS15169",
+    "organization": "Google LLC",
+    "country": "US",
+    "asn_name": "GOOGLE",
+    "type": "BUSINESS",
+    "domain": "google.com",
+    "date_allocated": "2012-02-24T00:00",
+    "allocation_status": "",
+    "num_of_ipv4_routes": "1020",
+    "num_of_ipv6_routes": "136",
+    "rir": "ARIN"
+  }
 }
 ```
 ### Get ASN Information by ASN Number
@@ -864,27 +988,27 @@ asn_opts = {
 asn_instance = IpgeolocationSdk::ASNLookupApi.new
 begin
   result = asn_instance.get_asn_info(asn_opts)
-  p result
+  puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
   puts "Error calling ASNLookupApi: #{e}"
 end
 ```
 Sample Response
-```
-class ASNResponse {
-    asn: class ASNDetails {
-        asNumber: AS15169
-        organization: Google LLC
-        country: US
-        asnName: GOOGLE
-        type: BUSINESS
-        domain: about.google
-        dateAllocated: 
-        allocationStatus: assigned
-        numOfIpv4Routes: 983
-        numOfIpv6Routes: 104
-        rir: ARIN
-    }
+```json
+{
+  "asn": {
+    "as_number": "AS15169",
+    "organization": "Google LLC",
+    "country": "US",
+    "asn_name": "GOOGLE",
+    "type": "BUSINESS",
+    "domain": "google.com",
+    "date_allocated": "2012-02-24T00:00",
+    "allocation_status": "",
+    "num_of_ipv4_routes": "1020",
+    "num_of_ipv6_routes": "136",
+    "rir": "ARIN"
+  }
 }
 ```
 
@@ -903,163 +1027,167 @@ rescue IpgeolocationSdk::ApiError => e
 end
 ```
 Sample Response
+```json
+{
+  "asn": {
+    "as_number": "AS12",
+    "organization": "New York University",
+    "country": "US",
+    "asn_name": "NYU-DOMAIN",
+    "type": "EDUCATION",
+    "domain": "nyu.edu",
+    "date_allocated": "2023-05-25T00:00",
+    "allocation_status": "",
+    "num_of_ipv4_routes": "11",
+    "num_of_ipv6_routes": "1",
+    "rir": "ARIN",
+    "routes": [
+      "192.76.177.0/24",
+      "...",
+      "216.165.103.0/24"
+    ],
+    "upstreams": [
+      {
+        "as_number": "AS3269",
+        "description": "Telecom Italia S.p.A.",
+        "country": "IT"
+      },
+      "...",
+      {
+        "as_number": "AS137",
+        "description": "Consortium GARR",
+        "country": "IT"
+      }
+    ],
+    "downstreams": [
+      {
+        "as_number": "AS394666",
+        "description": "NYU Langone Health",
+        "country": "US"
+      },
+      {
+        "as_number": "AS54965",
+        "description": "Polytechnic Institute of NYU",
+        "country": "US"
+      }
+    ],
+    "peers": [
+      {
+        "as_number": "AS3269",
+        "description": "Telecom Italia S.p.A.",
+        "country": "IT"
+      },
+      "...",
+      {
+        "as_number": "AS54965",
+        "description": "Polytechnic Institute of NYU",
+        "country": "US"
+      }
+    ],
+    "whois_response": "<raw-whois-response>"
+  }
+}
 ```
-class ASNResponse {
-    ip: null
-    asn: class ASNDetails {
-        asNumber: AS12
-        organization: New York University
-        country: US
-        asnName: NYU-DOMAIN
-        type: EDUCATION
-        domain: nyu.edu
-        dateAllocated: 
-        allocationStatus: assigned
-        numOfIpv4Routes: 11
-        numOfIpv6Routes: 1
-        rir: ARIN
-        routes: [192.76.177.0/24, 216.165.96.0/20, 216.165.89.0/24, 216.165.0.0/18, 216.165.112.0/21, 128.122.0.0/16, 2607:f600::/32, 216.165.102.0/24, 216.165.64.0/19, 216.165.120.0/22, 192.86.139.0/24, 216.165.103.0/24]
-        upstreams: [class ASNConnection {
-            asNumber: AS3269
-            description: Telecom Italia S.p.A.
-            country: IT
-        }, class ASNConnection {
-            asNumber: AS8220
-            description: COLT Technology Services Group Limited
-            country: GB
-        }, class ASNConnection {
-            asNumber: AS286
-            description: GTT Communications Inc.
-            country: US
-        }, class ASNConnection {
-            asNumber: AS3257
-            description: GTT Communications Inc.
-            country: US
-        }, class ASNConnection {
-            asNumber: AS3754
-            description: NYSERNet
-            country: US
-        }, class ASNConnection {
-            asNumber: AS3356
-            description: Level 3 Parent, LLC
-            country: US
-        }, class ASNConnection {
-            asNumber: AS6461
-            description: Zayo Bandwidth
-            country: US
-        }, class ASNConnection {
-            asNumber: AS137
-            description: Consortium GARR
-            country: IT
-        }]
-        downstreams: [class ASNConnection {
-            asNumber: AS394666
-            description: NYU Langone Health
-            country: US
-        }, class ASNConnection {
-            asNumber: AS54965
-            description: Polytechnic Institute of NYU
-            country: US
-        }]
-        peers: [class ASNConnection {
-            asNumber: AS3269
-            description: Telecom Italia S.p.A.
-            country: IT
-        }, class ASNConnection {
-            asNumber: AS8220
-            description: COLT Technology Services Group Limited
-            country: GB
-        }, class ASNConnection {
-            asNumber: AS394666
-            description: NYU Langone Health
-            country: US
-        }, class ASNConnection {
-            asNumber: AS286
-            description: GTT Communications Inc.
-            country: NL
-        }, class ASNConnection {
-            asNumber: AS286
-            description: GTT Communications Inc.
-            country: US
-        }, class ASNConnection {
-            asNumber: AS3257
-            description: GTT Communications Inc.
-            country: US
-        }, class ASNConnection {
-            asNumber: AS3754
-            description: NYSERNet
-            country: US
-        }, class ASNConnection {
-            asNumber: AS3356
-            description: Level 3 Parent, LLC
-            country: US
-        }, class ASNConnection {
-            asNumber: AS6461
-            description: Zayo Bandwidth
-            country: US
-        }, class ASNConnection {
-            asNumber: AS137
-            description: Consortium GARR
-            country: IT
-        }, class ASNConnection {
-            asNumber: AS54965
-            description: Polytechnic Institute of NYU
-            country: US
-        }]
-        whoisResponse: 
-        
-        
-        ASNumber:       12
-        ASName:         NYU-DOMAIN
-        ASHandle:       AS12
-        RegDate:        1984-07-05
-        Updated:        2023-05-25    
-        Ref:            https://rdap.arin.net/registry/autnum/12
-        
-        
-        OrgName:        New York University
-        OrgId:          NYU-Z
-        Address:        726 Broadway, 8th Floor - ITS
-        City:           New York
-        StateProv:      NY
-        PostalCode:     10003
-        Country:        US
-        RegDate:        2023-05-15
-        Updated:        2023-05-15
-        Ref:            https://rdap.arin.net/registry/entity/NYU-Z
-        
-        
-        OrgAbuseHandle: OIS9-ARIN
-        OrgAbuseName:   Office of Information Security
-        OrgAbusePhone:  +1-212-998-3333 
-        OrgAbuseEmail:  abuse@nyu.edu
-        OrgAbuseRef:    https://rdap.arin.net/registry/entity/OIS9-ARIN
-        
-        OrgNOCHandle: COSI-ARIN
-        OrgNOCName:   Communications Operations Services - ITS
-        OrgNOCPhone:  +1-212-998-3444 
-        OrgNOCEmail:  noc-cosi-arin@nyu.edu
-        OrgNOCRef:    https://rdap.arin.net/registry/entity/COSI-ARIN
-        
-        OrgTechHandle: COSI-ARIN
-        OrgTechName:   Communications Operations Services - ITS
-        OrgTechPhone:  +1-212-998-3444 
-        OrgTechEmail:  noc-cosi-arin@nyu.edu
-        OrgTechRef:    https://rdap.arin.net/registry/entity/COSI-ARIN
-        
-        RTechHandle: COSI-ARIN
-        RTechName:   Communications Operations Services - ITS
-        RTechPhone:  +1-212-998-3444 
-        RTechEmail:  noc-cosi-arin@nyu.edu
-        RTechRef:    https://rdap.arin.net/registry/entity/COSI-ARIN
-        
-        RNOCHandle: COSI-ARIN
-        RNOCName:   Communications Operations Services - ITS
-        RNOCPhone:  +1-212-998-3444 
-        RNOCEmail:  noc-cosi-arin@nyu.edu
-        RNOCRef:    https://rdap.arin.net/registry/entity/COSI-ARIN
-               
-    }
+
+## Abuse Contact API Examples
+This section demonstrates how to use the `get_abuse_contact_info()` method of the AbuseContact API. This API helps security teams, hosting providers, and compliance professionals quickly identify the correct abuse reporting contacts for any IPv4 or IPv6 address. You can retrieve data like the responsible organization, role, contact emails, phone numbers, and address to take appropriate mitigation action against abusive or malicious activity.
+
+> [!NOTE] 
+> Abuse Contact API is only available in Advanced Plan.
+
+Refer to the official [Abuse Contact API documentation](https://ipgeolocation.io/ip-abuse-contact-api.html#documentation-overview) for details on all available fields.
+### Lookup Abuse Contact by IP
+```ruby
+abuse_opts = {
+  ip: '1.0.0.0',
+}
+abuse_instance = IpgeolocationSdk::AbuseContactApi.new
+begin 
+    result = abuse_instance.get_abuse_contact_info(abuse_opts)
+    puts result.to_hash.to_json
+rescue IpgeolocationSdk::ApiError => e
+    puts "Error calling AbuseContactApi: #{e}"
+end
+```
+Sample Response:
+```json
+{
+  "ip": "1.0.0.0",
+  "abuse": {
+    "route": "1.0.0.0/24",
+    "country": "AU",
+    "handle": "IRT-APNICRANDNET-AU",
+    "name": "IRT-APNICRANDNET-AU",
+    "organization": "",
+    "role": "abuse",
+    "kind": "group",
+    "address": "PO Box 3646\nSouth Brisbane, QLD 4101\nAustralia",
+    "emails": [
+      "helpdesk@apnic.net"
+    ],
+    "phone_numbers": [
+      "+61 7 3858 3100"
+    ]
+  }
+}
+```
+
+### Lookup Abuse Contact with Specific Fields
+```ruby
+abuse_opts = {
+  ip: '1.2.3.4',
+  fields: 'abuse.role,abuse.emails',
+}
+abuse_instance = IpgeolocationSdk::AbuseContactApi.new
+begin 
+    result = abuse_instance.get_abuse_contact_info(abuse_opts)
+    puts result.to_hash.to_json
+rescue IpgeolocationSdk::ApiError => e
+    puts "Error calling AbuseContactApi: #{e}"
+end
+```
+Sample Response:
+```json
+{
+  "ip": "1.2.3.4",
+  "abuse": {
+    "role": "abuse",
+    "emails": [
+      "helpdesk@apnic.net"
+    ]
+  }
+}
+```
+### Lookup Abuse Contact while Excluding Fields
+```ruby
+abuse_opts = {
+  ip: '9.9.9.9',
+  excludes: 'abuse.handle,abuse.emails',
+}
+abuse_instance = IpgeolocationSdk::AbuseContactApi.new
+begin 
+    result = abuse_instance.get_abuse_contact_info(abuse_opts)
+    puts result.to_hash.to_json
+rescue IpgeolocationSdk::ApiError => e
+    puts "Error calling AbuseContactApi: #{e}"
+end
+```
+Sample Response:
+```json
+{
+  "ip": "9.9.9.9",
+  "abuse": {
+    "route": "9.9.9.0/24",
+    "country": "",
+    "name": "Quad9 Abuse",
+    "organization": "Quad9 Abuse",
+    "role": "abuse",
+    "kind": "group",
+    "address": "1442 A Walnut Street Ste 501\nBerkeley\nCA\n94709\nUnited States",
+    "phone_numbers": [
+      "+1-415-831-3129"
+    ]
+  }
 }
 ```
 
@@ -1078,69 +1206,67 @@ time_zone_opts = {
 time_zone_instance = IpgeolocationSdk::TimezoneApi.new
 begin 
     result = time_zone_instance.get_timezone_info(time_zone_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling TimezoneApi: #{e}"
 end
 ```
 Sample Response
-```
-class TimeZoneResponse {
-    ip: 8.8.8.8
-   
-    location: class TimezoneLocation {
-        continentCode: NA
-        continentName: North America
-        countryCode2: US
-        countryCode3: USA
-        countryName: United States
-        countryNameOfficial: United States of America
-        isEu: false
-        stateProv: California
-        stateCode: US-CA
-        district: Santa Clara
-        city: Mountain View
-        locality: null
-        zipcode: 94043-1351
-        latitude: 37.42240
-        longitude: -122.08421
+```json
+{
+  "ip": "8.8.8.8",
+  "location": {
+    "continent_code": "NA",
+    "continent_name": "North America",
+    "country_code2": "US",
+    "country_code3": "USA",
+    "country_name": "United States",
+    "country_name_official": "United States of America",
+    "is_eu": false,
+    "state_prov": "California",
+    "state_code": "US-CA",
+    "district": "Santa Clara",
+    "city": "Mountain View",
+    "zipcode": "94043-1351",
+    "latitude": "37.42240",
+    "longitude": "-122.08421"
+  },
+  "time_zone": {
+    "name": "America/Los_Angeles",
+    "offset": -8,
+    "offset_with_dst": -8,
+    "date": "2025-12-24",
+    "date_time": "2025-12-24 02:45:59",
+    "date_time_txt": "Wednesday, December 24, 2025 02:45:59",
+    "date_time_wti": "Wed, 24 Dec 2025 02:45:59 -0800",
+    "date_time_ymd": "2025-12-24 02:45:59 -0800",
+    "date_time_unix": 1766573159.034,
+    "time_24": "02:45:59",
+    "time_12": "02:45:59 AM",
+    "week": 52,
+    "month": 12,
+    "year": 2025,
+    "year_abbr": "25",
+    "is_dst": false,
+    "dst_savings": 0,
+    "dst_exists": true,
+    "dst_start": {
+      "utc_time": "2025-03-09 TIME 10",
+      "duration": "+1H",
+      "gap": true,
+      "date_time_after": "2025-03-09 TIME 03",
+      "date_time_before": "2025-03-09 TIME 02",
+      "overlap": false
+    },
+    "dst_end": {
+      "utc_time": "2025-11-02 TIME 09",
+      "duration": "-1H",
+      "gap": false,
+      "date_time_after": "2025-11-02 TIME 01",
+      "date_time_before": "2025-11-02 TIME 02",
+      "overlap": true
     }
-    timeZone: class TimezoneDetails {
-        name: America/Los_Angeles
-        offset: -8
-        offsetWithDst: -7
-        date: 2025-06-23
-        dateTime: 2025-06-23 02:15:25
-        dateTimeTxt: Monday, June 23, 2025 02:15:25
-        dateTimeWti: Mon, 23 Jun 2025 02:15:25 -0700
-        dateTimeYmd: 2025-06-23T02:15:25-0700
-        dateTimeUnix: 1.750670125437E9
-        time24: 02:15:25
-        time12: 02:15:25 AM
-        week: 26
-        month: 6
-        year: 2025
-        yearAbbr: 25
-        isDst: true
-        dstSavings: 1
-        dstExists: true
-        dstStart: class TimezoneDetailDstStart {
-            utcTime: 2025-03-09 TIME 10
-            duration: +1H
-            gap: true
-            dateTimeAfter: 2025-03-09 TIME 03
-            dateTimeBefore: 2025-03-09 TIME 02
-            overlap: false
-        }
-        dstEnd: class TimezoneDetailDstEnd {
-            utcTime: 2025-11-02 TIME 09
-            duration: -1H
-            gap: false
-            dateTimeAfter: 2025-11-02 TIME 01
-            dateTimeBefore: 2025-11-02 TIME 02
-            overlap: true
-        }
-    }
+  }
 }
 ```
 ### Get Timezone by Timezone Name
@@ -1152,50 +1278,50 @@ time_zone_opts = {
 time_zone_instance = IpgeolocationSdk::TimezoneApi.new
 begin 
     result = time_zone_instance.get_timezone_info(time_zone_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling TimezoneApi: #{e}"
 end
 ```
 Sample Response
-``` 
-class TimeZoneResponse {
-    timeZone: class TimezoneDetails {
-        name: Europe/London
-        offset: 0
-        offsetWithDst: 1
-        date: 2025-06-23
-        dateTime: 2025-06-23 10:25:01
-        dateTimeTxt: Monday, June 23, 2025 10:25:01
-        dateTimeWti: Mon, 23 Jun 2025 10:25:01 +0100
-        dateTimeYmd: 2025-06-23T10:25:01+0100
-        dateTimeUnix: 1.750670701706E9
-        time24: 10:25:01
-        time12: 10:25:01 AM
-        week: 26
-        month: 6
-        year: 2025
-        yearAbbr: 25
-        isDst: true
-        dstSavings: 1
-        dstExists: true
-        dstStart: class TimezoneDetailDstStart {
-            utcTime: 2025-03-30 TIME 01
-            duration: +1H
-            gap: true
-            dateTimeAfter: 2025-03-30 TIME 02
-            dateTimeBefore: 2025-03-30 TIME 01
-            overlap: false
-        }
-        dstEnd: class TimezoneDetailDstEnd {
-            utcTime: 2025-10-26 TIME 01
-            duration: -1H
-            gap: false
-            dateTimeAfter: 2025-10-26 TIME 01
-            dateTimeBefore: 2025-10-26 TIME 02
-            overlap: true
-        }
+```json
+{
+  "time_zone": {
+    "name": "Europe/London",
+    "offset": 0,
+    "offset_with_dst": 0,
+    "date": "2025-12-24",
+    "date_time": "2025-12-24 10:46:56",
+    "date_time_txt": "Wednesday, December 24, 2025 10:46:56",
+    "date_time_wti": "Wed, 24 Dec 2025 10:46:56 +0000",
+    "date_time_ymd": "2025-12-24 10:46:56 +0000",
+    "date_time_unix": 1766573216.682,
+    "time_24": "10:46:56",
+    "time_12": "10:46:56 AM",
+    "week": 52,
+    "month": 12,
+    "year": 2025,
+    "year_abbr": "25",
+    "is_dst": false,
+    "dst_savings": 0,
+    "dst_exists": true,
+    "dst_start": {
+      "utc_time": "2025-03-30 TIME 01",
+      "duration": "+1H",
+      "gap": true,
+      "date_time_after": "2025-03-30 TIME 02",
+      "date_time_before": "2025-03-30 TIME 01",
+      "overlap": false
+    },
+    "dst_end": {
+      "utc_time": "2025-10-26 TIME 01",
+      "duration": "-1H",
+      "gap": false,
+      "date_time_after": "2025-10-26 TIME 01",
+      "date_time_before": "2025-10-26 TIME 02",
+      "overlap": true
     }
+  }
 }
 ```
 ### Get Timezone from Any Address
@@ -1207,59 +1333,59 @@ time_zone_opts = {
 time_zone_instance = IpgeolocationSdk::TimezoneApi.new
 begin 
     result = time_zone_instance.get_timezone_info(time_zone_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling TimezoneApi: #{e}"
 end
 ```
 Sample Response
-```
-class TimeZoneResponse {
-    location: class TimezoneLocation {
-        locationString: Munich, Germany
-        countryName: Germany
-        stateProv: Bavaria
-        city: Munich
-        locality: 
-        latitude: 48.13711
-        longitude: 11.57538
+```json
+{
+  "location": {
+    "location_string": "Munich, Germany",
+    "country_name": "Germany",
+    "state_prov": "Bavaria",
+    "city": "Munich",
+    "locality": "",
+    "latitude": "48.13711",
+    "longitude": "11.57538"
+  },
+  "time_zone": {
+    "name": "Europe/Berlin",
+    "offset": 1,
+    "offset_with_dst": 1,
+    "date": "2025-12-24",
+    "date_time": "2025-12-24 11:47:59",
+    "date_time_txt": "Wednesday, December 24, 2025 11:47:59",
+    "date_time_wti": "Wed, 24 Dec 2025 11:47:59 +0100",
+    "date_time_ymd": "2025-12-24 11:47:59 +0100",
+    "date_time_unix": 1766573279.493,
+    "time_24": "11:47:59",
+    "time_12": "11:47:59 AM",
+    "week": 52,
+    "month": 12,
+    "year": 2025,
+    "year_abbr": "25",
+    "is_dst": false,
+    "dst_savings": 0,
+    "dst_exists": true,
+    "dst_start": {
+      "utc_time": "2025-03-30 TIME 01",
+      "duration": "+1H",
+      "gap": true,
+      "date_time_after": "2025-03-30 TIME 03",
+      "date_time_before": "2025-03-30 TIME 02",
+      "overlap": false
+    },
+    "dst_end": {
+      "utc_time": "2025-10-26 TIME 01",
+      "duration": "-1H",
+      "gap": false,
+      "date_time_after": "2025-10-26 TIME 02",
+      "date_time_before": "2025-10-26 TIME 03",
+      "overlap": true
     }
-    timeZone: class TimezoneDetails {
-        name: Europe/Berlin
-        offset: 1
-        offsetWithDst: 2
-        date: 2025-06-23
-        dateTime: 2025-06-23 11:35:23
-        dateTimeTxt: Monday, June 23, 2025 11:35:23
-        dateTimeWti: Mon, 23 Jun 2025 11:35:23 +0200
-        dateTimeYmd: 2025-06-23T11:35:23+0200
-        dateTimeUnix: 1.750671323755E9
-        time24: 11:35:23
-        time12: 11:35:23 AM
-        week: 26
-        month: 6
-        year: 2025
-        yearAbbr: 25
-        isDst: true
-        dstSavings: 1
-        dstExists: true
-        dstStart: class TimezoneDetailDstStart {
-            utcTime: 2025-03-30 TIME 01
-            duration: +1H
-            gap: true
-            dateTimeAfter: 2025-03-30 TIME 03
-            dateTimeBefore: 2025-03-30 TIME 02
-            overlap: false
-        }
-        dstEnd: class TimezoneDetailDstEnd {
-            utcTime: 2025-10-26 TIME 01
-            duration: -1H
-            gap: false
-            dateTimeAfter: 2025-10-26 TIME 02
-            dateTimeBefore: 2025-10-26 TIME 03
-            overlap: true
-        }
-    }
+  }
 }
 ```
 ### Get Timezone from Location Coordinates
@@ -1272,50 +1398,50 @@ time_zone_opts = {
 time_zone_instance = IpgeolocationSdk::TimezoneApi.new
 begin 
     result = time_zone_instance.get_timezone_info(time_zone_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling TimezoneApi: #{e}"
 end
 ```
 Sample Response
-```
-class TimeZoneResponse {
-    timeZone: class TimezoneDetails {
-        name: Europe/Paris
-        offset: 1
-        offsetWithDst: 2
-        date: 2025-06-23
-        dateTime: 2025-06-23 11:53:31
-        dateTimeTxt: Monday, June 23, 2025 11:53:31
-        dateTimeWti: Mon, 23 Jun 2025 11:53:31 +0200
-        dateTimeYmd: 2025-06-23T11:53:31+0200
-        dateTimeUnix: 1.750672411295E9
-        time24: 11:53:31
-        time12: 11:53:31 AM
-        week: 26
-        month: 6
-        year: 2025
-        yearAbbr: 25
-        isDst: true
-        dstSavings: 1
-        dstExists: true
-        dstStart: class TimezoneDetailDstStart {
-            utcTime: 2025-03-30 TIME 01
-            duration: +1H
-            gap: true
-            dateTimeAfter: 2025-03-30 TIME 03
-            dateTimeBefore: 2025-03-30 TIME 02
-            overlap: false
-        }
-        dstEnd: class TimezoneDetailDstEnd {
-            utcTime: 2025-10-26 TIME 01
-            duration: -1H
-            gap: false
-            dateTimeAfter: 2025-10-26 TIME 02
-            dateTimeBefore: 2025-10-26 TIME 03
-            overlap: true
-        }
+```json
+{
+  "time_zone": {
+    "name": "Europe/Berlin",
+    "offset": 1,
+    "offset_with_dst": 1,
+    "date": "2025-12-24",
+    "date_time": "2025-12-24 11:48:52",
+    "date_time_txt": "Wednesday, December 24, 2025 11:48:52",
+    "date_time_wti": "Wed, 24 Dec 2025 11:48:52 +0100",
+    "date_time_ymd": "2025-12-24 11:48:52 +0100",
+    "date_time_unix": 1766573332.887,
+    "time_24": "11:48:52",
+    "time_12": "11:48:52 AM",
+    "week": 52,
+    "month": 12,
+    "year": 2025,
+    "year_abbr": "25",
+    "is_dst": false,
+    "dst_savings": 0,
+    "dst_exists": true,
+    "dst_start": {
+      "utc_time": "2025-03-30 TIME 01",
+      "duration": "+1H",
+      "gap": true,
+      "date_time_after": "2025-03-30 TIME 03",
+      "date_time_before": "2025-03-30 TIME 02",
+      "overlap": false
+    },
+    "dst_end": {
+      "utc_time": "2025-10-26 TIME 01",
+      "duration": "-1H",
+      "gap": false,
+      "date_time_after": "2025-10-26 TIME 02",
+      "date_time_before": "2025-10-26 TIME 03",
+      "overlap": true
     }
+  }
 }
 ```
 ### Get Timezone and Airport Details from IATA Code
@@ -1327,67 +1453,67 @@ time_zone_opts = {
 time_zone_instance = IpgeolocationSdk::TimezoneApi.new
 begin 
     result = time_zone_instance.get_timezone_info(time_zone_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling TimezoneApi: #{e}"
 end
 ```
 Sample Response
-```
-class TimeZoneResponse {
-    airportDetails: class TimezoneAirport {
-        type: large_airport
-        name: Zurich Airport
-        latitude: 47.45806
-        longitude: 8.54806
-        elevationFt: 1417
-        continentCode: EU
-        countryCode: CH
-        stateCode: CH-ZH
-        city: Zurich
-        iataCode: ZRH
-        icaoCode: LSZH
-        faaCode: 
+```json
+{
+  "airport_details": {
+    "type": "large_airport",
+    "name": "Zurich Airport",
+    "latitude": "47.45806",
+    "longitude": "8.54806",
+    "elevation_ft": 1417,
+    "continent_code": "EU",
+    "country_code": "CH",
+    "state_code": "CH-ZH",
+    "city": "Zurich",
+    "iata_code": "ZRH",
+    "icao_code": "LSZH",
+    "faa_code": ""
+  },
+  "time_zone": {
+    "name": "Europe/Zurich",
+    "offset": 1,
+    "offset_with_dst": 1,
+    "date": "2025-12-24",
+    "date_time": "2025-12-24 11:49:56",
+    "date_time_txt": "Wednesday, December 24, 2025 11:49:56",
+    "date_time_wti": "Wed, 24 Dec 2025 11:49:56 +0100",
+    "date_time_ymd": "2025-12-24 11:49:56 +0100",
+    "date_time_unix": 1766573396.338,
+    "time_24": "11:49:56",
+    "time_12": "11:49:56 AM",
+    "week": 52,
+    "month": 12,
+    "year": 2025,
+    "year_abbr": "25",
+    "is_dst": false,
+    "dst_savings": 0,
+    "dst_exists": true,
+    "dst_start": {
+      "utc_time": "2025-03-30 TIME 01",
+      "duration": "+1H",
+      "gap": true,
+      "date_time_after": "2025-03-30 TIME 03",
+      "date_time_before": "2025-03-30 TIME 02",
+      "overlap": false
+    },
+    "dst_end": {
+      "utc_time": "2025-10-26 TIME 01",
+      "duration": "-1H",
+      "gap": false,
+      "date_time_after": "2025-10-26 TIME 02",
+      "date_time_before": "2025-10-26 TIME 03",
+      "overlap": true
     }
-    timeZone: class TimezoneDetails {
-        name: Europe/Zurich
-        offset: 1
-        offsetWithDst: 2
-        date: 2025-06-23
-        dateTime: 2025-06-23 12:24:08
-        dateTimeTxt: Monday, June 23, 2025 12:24:08
-        dateTimeWti: Mon, 23 Jun 2025 12:24:08 +0200
-        dateTimeYmd: 2025-06-23T12:24:08+0200
-        dateTimeUnix: 1.750674248242E9
-        time24: 12:24:08
-        time12: 12:24:08 PM
-        week: 26
-        month: 6
-        year: 2025
-        yearAbbr: 25
-        isDst: true
-        dstSavings: 1
-        dstExists: true
-        dstStart: class TimezoneDetailDstStart {
-            utcTime: 2025-03-30 TIME 01
-            duration: +1H
-            gap: true
-            dateTimeAfter: 2025-03-30 TIME 03
-            dateTimeBefore: 2025-03-30 TIME 02
-            overlap: false
-        }
-        dstEnd: class TimezoneDetailDstEnd {
-            utcTime: 2025-10-26 TIME 01
-            duration: -1H
-            gap: false
-            dateTimeAfter: 2025-10-26 TIME 02
-            dateTimeBefore: 2025-10-26 TIME 03
-            overlap: true
-        }
-    }
+  }
 }
 ```
-Similarly, you can fetch Airport Details and Timezone from using any ICAO code as well
+Similarly, you can fetch Airport Details and Timezone from using any ICAO code (`icao_code`) as well.
 
 ### Get Timezone and City Details from UN/LOCODE
 
@@ -1398,60 +1524,60 @@ time_zone_opts = {
 time_zone_instance = IpgeolocationSdk::TimezoneApi.new
 begin 
     result = time_zone_instance.get_timezone_info(time_zone_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling TimezoneApi: #{e}"
 end
 ```
 Sample Response
-```
-class TimeZoneResponse {
-    loCodeDetails: class TimezoneLocode {
-        loCode: ESBCN
-        city: Barcelona
-        stateCode: 
-        countryCode: ES
-        countryName: 
-        locationType: Port, Rail Terminal, Road Terminal, Airport, Postal Exchange
-        latitude: 41.38289
-        longitude: 2.17743
+```json
+{
+  "lo_code_details": {
+    "lo_code": "ESBCN",
+    "city": "Barcelona",
+    "state_code": "",
+    "country_code": "ES",
+    "country_name": "",
+    "location_type": "Port, Rail Terminal, Road Terminal, Airport, Postal Exchange",
+    "latitude": "41.38289",
+    "longitude": "2.17743"
+  },
+  "time_zone": {
+    "name": "Europe/Madrid",
+    "offset": 1,
+    "offset_with_dst": 1,
+    "date": "2025-12-24",
+    "date_time": "2025-12-24 11:51:22",
+    "date_time_txt": "Wednesday, December 24, 2025 11:51:22",
+    "date_time_wti": "Wed, 24 Dec 2025 11:51:22 +0100",
+    "date_time_ymd": "2025-12-24 11:51:22 +0100",
+    "date_time_unix": 1766573482.037,
+    "time_24": "11:51:22",
+    "time_12": "11:51:22 AM",
+    "week": 52,
+    "month": 12,
+    "year": 2025,
+    "year_abbr": "25",
+    "is_dst": false,
+    "dst_savings": 0,
+    "dst_exists": true,
+    "dst_start": {
+      "utc_time": "2025-03-30 TIME 01",
+      "duration": "+1H",
+      "gap": true,
+      "date_time_after": "2025-03-30 TIME 03",
+      "date_time_before": "2025-03-30 TIME 02",
+      "overlap": false
+    },
+    "dst_end": {
+      "utc_time": "2025-10-26 TIME 01",
+      "duration": "-1H",
+      "gap": false,
+      "date_time_after": "2025-10-26 TIME 02",
+      "date_time_before": "2025-10-26 TIME 03",
+      "overlap": true
     }
-    timeZone: class TimezoneDetails {
-        name: Europe/Madrid
-        offset: 1
-        offsetWithDst: 2
-        date: 2025-06-23
-        dateTime: 2025-06-23 12:32:55
-        dateTimeTxt: Monday, June 23, 2025 12:32:55
-        dateTimeWti: Mon, 23 Jun 2025 12:32:55 +0200
-        dateTimeYmd: 2025-06-23T12:32:55+0200
-        dateTimeUnix: 1.750674775033E9
-        time24: 12:32:55
-        time12: 12:32:55 PM
-        week: 26
-        month: 6
-        year: 2025
-        yearAbbr: 25
-        isDst: true
-        dstSavings: 1
-        dstExists: true
-        dstStart: class TimezoneDetailDstStart {
-            utcTime: 2025-03-30 TIME 01
-            duration: +1H
-            gap: true
-            dateTimeAfter: 2025-03-30 TIME 03
-            dateTimeBefore: 2025-03-30 TIME 02
-            overlap: false
-        }
-        dstEnd: class TimezoneDetailDstEnd {
-            utcTime: 2025-10-26 TIME 01
-            duration: -1H
-            gap: false
-            dateTimeAfter: 2025-10-26 TIME 02
-            dateTimeBefore: 2025-10-26 TIME 03
-            overlap: true
-        }
-    }
+  }
 }
 ```
 
@@ -1483,18 +1609,18 @@ time_conversion_opts = {
 time_conversion_instance = IpgeolocationSdk::TimeConversionApi.new
 begin
   result = time_conversion_instance.convert_time_between_timezones(time_conversion_opts)
-  p result
+  puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
   puts "Error calling TimeConversionApi: #{e}"
 end
 ```
 Sample Response
-```
-class TimeConversionResponse {
-    originalTime: 2024-12-08 11:00
-    convertedTime: 2024-12-09 01:00:00
-    diffHour: 14.0
-    diffMin: 840
+```json
+{
+  "original_time": "2025-12-24 05:52:21 +0500",
+  "converted_time": "2025-12-24 19:52:21 +0500",
+  "diff_hour": 14.0,
+  "diff_min": 840
 }
 ```
 Similarly, you can convert time from any timezone to another timezone using location coordinates (Latitude and Longitude), location addresses, IATA codes, ICAO codes and UN/LOCODE.
@@ -1514,56 +1640,61 @@ get_user_agent_opts = {
 user_agent_instance = IpgeolocationSdk::UserAgentApi.new
 begin
     result = user_agent_instance.get_user_agent_details(get_user_agent_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling UserAgentApi: #{e}"
 end
 ```
 Sample Response
-```
-class UserAgentData {
-    userAgentString: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36
-    name: Chrome
-    type: Browser
-    version: 125
-    versionMajor: 125
-    device: class UserAgentDataDevice {
-        name: Desktop
-        type: Desktop
-        brand: Unknown
-        cpu: Intel x86_64
-    }
-    engine: class UserAgentDataEngine {
-        name: Blink
-        type: Browser
-        version: 125
-        versionMajor: 125
-    }
-    operatingSystem: class UserAgentDataOperatingSystem {
-        name: Windows NT
-        type: Desktop
-        version: ??
-        versionMajor: ??
-        build: ??
-    }
+```json
+{
+  "user_agent_string": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/237.84.2.178 Safari/537.36",
+  "name": "Chrome",
+  "type": "Browser",
+  "version": "237.84.2.178",
+  "version_major": "237",
+  "device": {
+    "name": "Desktop",
+    "type": "Desktop",
+    "brand": "Unknown",
+    "cpu": "Intel x86_64"
+  },
+  "engine": {
+    "name": "Blink",
+    "type": "Browser",
+    "version": "237.84",
+    "version_major": "237"
+  },
+  "operating_system": {
+    "name": "Windows NT",
+    "type": "Desktop",
+    "version": ">=10",
+    "version_major": ">=10",
+    "build": "??"
+  }
 }
 ```
 If you don't pass any userAgentString, the API will return the data of device's user agent.
 
-## Bulk User Agent Parsing Example
+### Bulk User Agent Parsing Example
 
 The SDK also supports bulk User Agent parsing using the `parse_bulk_user_agent_strings()` method. This allows parsing multiple user agent strings in a single request. All fields available in single-user-agent parsing are returned per entry.
 
 ```ruby
 post_user_agent_opts = {
-    user_agents: ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/237.84.2.178 Safari/537.36","Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1"]
+  user_agents: [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/237.84.2.178 Safari/537.36",
+    "Mozilla/5.0 (Linux; U; en-US) AppleWebKit/528.5+ (KHTML, like Gecko, Safari/528.5+) Version/4.0 Kindle/3.0 (screen 600x800; rotate)"
+  ]
 }
 user_agent_instance = IpgeolocationSdk::UserAgentApi.new
-begin 
-    result = user_agent_instance.parse_bulk_user_agent_strings(post_user_agent_opts)
-    p result
+begin
+  result = user_agent_instance.parse_bulk_user_agent_strings(post_user_agent_opts)
+  result.each do |item|
+    puts item.to_hash.to_json
+  end
 rescue IpgeolocationSdk::ApiError => e
-    puts "Error calling UserAgentApi: #{e}"
+  puts "Error calling UserAgentApi: #{e}"
 end
 ```
 
@@ -1573,7 +1704,7 @@ This section provides usage examples of the `get_astronomy_details()` method fro
 
 Refer to the [official Astronomy API documentation](https://ipgeolocation.io/astronomy-api.html#documentation-overview) for more details.
 
-### Astronomy by Coordinates
+### Lookup Astronomy API by Coordinates
 
 ```ruby
 get_astronomy_opts = {
@@ -1583,75 +1714,76 @@ get_astronomy_opts = {
 astronomy_instance = IpgeolocationSdk::AstronomyApi.new
 begin 
     result = astronomy_instance.get_astronomy_details(get_astronomy_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling AstronomyApi: #{e}"
 end
 ```
 Sample Response
-```
-class AstronomyResponse {
-    location: class AstronomyLocation {
-        countryName:
-        stateProv: New York
-        city: New York
-        locality: 
-        latitude: 40.71280
-        longitude: -74.00600
-        elevation: 6.0
-    }
-    astronomy: class Astronomy {
-        date: 2025-07-22
-        currentTime: 05:34:17.046
-        midNight: 01:02
-        nightEnd: 03:48
-        morning: class AstronomyMorning {
-            astronomicalTwilightBegin: 03:48
-            astronomicalTwilightEnd: 04:32
-            nauticalTwilightBegin: 04:32
-            nauticalTwilightEnd: 05:12
-            civilTwilightBegin: 05:12
-            civilTwilightEnd: 05:43
-            blueHourBegin: 04:59
-            blueHourEnd: 05:24
-            goldenHourBegin: 05:24
-            goldenHourEnd: 06:23
-        }
-        sunrise: 05:43
-        sunset: 20:21
-        evening: class AstronomyEvening {
-            goldenHourBegin: 19:41
-            goldenHourEnd: 20:40
-            blueHourBegin: 20:40
-            blueHourEnd: 21:05
-            civilTwilightBegin: 20:21
-            civilTwilightEnd: 20:52
-            nauticalTwilightBegin: 20:52
-            nauticalTwilightEnd: 21:31
-            astronomicalTwilightBegin: 21:31
-            astronomicalTwilightEnd: 22:16
-        }
-        nightBegin: 22:16
-        sunStatus: -
-        solarNoon: 13:02
-        dayLength: 14:37
-        sunAltitude: -2.4240905951150817
-        sunDistance: 152012050.75662628
-        sunAzimuth: 60.53270916713848
-        moonPhase: WANING_CRESCENT
-        moonrise: 02:48
-        moonset: 19:10
-        moonStatus: -
-        moonAltitude: 26.687264834949556
-        moonDistance: 369857.6483476412
-        moonAzimuth: 74.22460131532307
-        moonParallacticAngle: -56.08124322972331
-        moonIlluminationPercentage: -7.41
-        moonAngle: 328.4181377849406
-    }
+```json
+{
+  "location": {
+    "country_name": "United States",
+    "state_prov": "New York",
+    "city": "New York City",
+    "locality": "",
+    "latitude": "40.71280",
+    "longitude": "-74.00600",
+    "elevation": "6"
+  },
+  "astronomy": {
+    "date": "2025-12-24",
+    "current_time": "07:56:54.527",
+    "mid_night": "23:56",
+    "night_end": "05:39",
+    "morning": {
+      "astronomical_twilight_begin": "05:39",
+      "astronomical_twilight_end": "06:12",
+      "nautical_twilight_begin": "06:12",
+      "nautical_twilight_end": "06:47",
+      "civil_twilight_begin": "06:47",
+      "civil_twilight_end": "07:17",
+      "blue_hour_begin": "06:35",
+      "blue_hour_end": "06:58",
+      "golden_hour_begin": "06:58",
+      "golden_hour_end": "08:01"
+    },
+    "sunrise": "07:17",
+    "sunset": "16:34",
+    "evening": {
+      "golden_hour_begin": "15:50",
+      "golden_hour_end": "16:52",
+      "blue_hour_begin": "16:52",
+      "blue_hour_end": "17:16",
+      "civil_twilight_begin": "16:34",
+      "civil_twilight_end": "17:04",
+      "nautical_twilight_begin": "17:04",
+      "nautical_twilight_end": "17:39",
+      "astronomical_twilight_begin": "17:39",
+      "astronomical_twilight_end": "18:12"
+    },
+    "night_begin": "18:12",
+    "sun_status": "-",
+    "solar_noon": "11:55",
+    "day_length": "09:16",
+    "sun_altitude": 5.265772362659565,
+    "sun_distance": 147152401.29833597,
+    "sun_azimuth": 127.26720409145577,
+    "moon_phase": "WAXING_CRESCENT",
+    "moonrise": "10:24",
+    "moonset": "21:09",
+    "moon_status": "-",
+    "moon_altitude": -27.021042229442685,
+    "moon_distance": 390396.0648657473,
+    "moon_azimuth": 87.02257245596411,
+    "moon_parallactic_angle": -51.64698459434443,
+    "moon_illumination_percentage": "18.22",
+    "moon_angle": 50.53259996734376
+  }
 }
 ```
-### Astronomy by IP Address
+
+### Lookup Astronomy API by IP Address
 ```ruby
 get_astronomy_opts = {
     ip: "8.8.8.8"
@@ -1659,86 +1791,86 @@ get_astronomy_opts = {
 astronomy_instance = IpgeolocationSdk::AstronomyApi.new
 begin 
     result = astronomy_instance.get_astronomy_details(get_astronomy_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling AstronomyApi: #{e}"
 end
 ```
 Sample Response
-```
-class AstronomyResponse {
-    ip: 8.8.8.8
-    location: class AstronomyLocation {
-        continentCode: NA
-        continentName: North America
-        countryCode2: US
-        countryCode3: USA
-        countryName: United States
-        countryNameOfficial: United States of America
-        isEu: false
-        stateProv: California
-        stateCode: US-CA
-        district: Santa Clara
-        city: Mountain View
-        locality: Charleston Terrace
-        zipcode: 94043-1351
-        latitude: 37.42240
-        longitude: -122.08421
-        elevation: 3.0
-    }
-    astronomy: class Astronomy {
-        date: 2025-07-22
-        currentTime: 02:36:01.027
-        midNight: 01:15
-        nightEnd: 04:18
-        morning: class AstronomyMorning {
-            astronomicalTwilightBegin: 04:18
-            astronomicalTwilightEnd: 04:58
-            nauticalTwilightBegin: 04:58
-            nauticalTwilightEnd: 05:35
-            civilTwilightBegin: 05:35
-            civilTwilightEnd: 06:04
-            blueHourBegin: 05:23
-            blueHourEnd: 05:47
-            goldenHourBegin: 05:47
-            goldenHourEnd: 06:42
-        }
-        sunrise: 06:04
-        sunset: 20:24
-        evening: class AstronomyEvening {
-            goldenHourBegin: 19:46
-            goldenHourEnd: 20:42
-            blueHourBegin: 20:42
-            blueHourEnd: 21:05
-            civilTwilightBegin: 20:24
-            civilTwilightEnd: 20:54
-            nauticalTwilightBegin: 20:54
-            nauticalTwilightEnd: 21:30
-            astronomicalTwilightBegin: 21:30
-            astronomicalTwilightEnd: 22:10
-        }
-        nightBegin: 22:10
-        sunStatus: -
-        solarNoon: 13:14
-        dayLength: 14:20
-        sunAltitude: -29.312204242565592
-        sunDistance: 152012050.7566263
-        sunAzimuth: 21.915241201213632
-        moonPhase: WANING_CRESCENT
-        moonrise: 03:23
-        moonset: 19:16
-        moonStatus: -
-        moonAltitude: -6.780866431657464
-        moonDistance: 369859.5847016905
-        moonAzimuth: 45.928379972251605
-        moonParallacticAngle: -40.47546867785306
-        moonIlluminationPercentage: -7.40
-        moonAngle: 328.43423626935555
-    }
+```json
+{
+  "ip": "8.8.8.8",
+  "location": {
+    "continent_code": "NA",
+    "continent_name": "North America",
+    "country_code2": "US",
+    "country_code3": "USA",
+    "country_name": "United States",
+    "country_name_official": "United States of America",
+    "is_eu": false,
+    "state_prov": "California",
+    "state_code": "US-CA",
+    "district": "Santa Clara",
+    "city": "Mountain View",
+    "locality": "Charleston Terrace",
+    "zipcode": "94043-1351",
+    "latitude": "37.42240",
+    "longitude": "-122.08421",
+    "elevation": "3"
+  },
+  "astronomy": {
+    "date": "2025-12-24",
+    "current_time": "04:58:05.179",
+    "mid_night": "00:07",
+    "night_end": "05:46",
+    "morning": {
+      "astronomical_twilight_begin": "05:46",
+      "astronomical_twilight_end": "06:18",
+      "nautical_twilight_begin": "06:18",
+      "nautical_twilight_end": "06:51",
+      "civil_twilight_begin": "06:51",
+      "civil_twilight_end": "07:20",
+      "blue_hour_begin": "06:40",
+      "blue_hour_end": "07:02",
+      "golden_hour_begin": "07:02",
+      "golden_hour_end": "08:01"
+    },
+    "sunrise": "07:20",
+    "sunset": "16:56",
+    "evening": {
+      "golden_hour_begin": "16:15",
+      "golden_hour_end": "17:13",
+      "blue_hour_begin": "17:13",
+      "blue_hour_end": "17:36",
+      "civil_twilight_begin": "16:56",
+      "civil_twilight_end": "17:25",
+      "nautical_twilight_begin": "17:25",
+      "nautical_twilight_end": "17:57",
+      "astronomical_twilight_begin": "17:57",
+      "astronomical_twilight_end": "18:29"
+    },
+    "night_begin": "18:29",
+    "sun_status": "-",
+    "solar_noon": "12:08",
+    "day_length": "09:35",
+    "sun_altitude": -27.417802893936713,
+    "sun_distance": 147152401.298336,
+    "sun_azimuth": 99.58317083105555,
+    "moon_phase": "WAXING_CRESCENT",
+    "moonrise": "10:34",
+    "moonset": "21:35",
+    "moon_status": "-",
+    "moon_altitude": -61.87418215314708,
+    "moon_distance": 390392.88359927345,
+    "moon_azimuth": 42.79081112532475,
+    "moon_parallactic_angle": -33.98006664201916,
+    "moon_illumination_percentage": "18.22",
+    "moon_angle": 50.54213695165953
+  }
 }
 ```
 
-### Astronomy by Location String
+### Lookup Astronomy API by Location String
 ```ruby
 get_astronomy_opts = {
     location: "Milan, Italy"
@@ -1746,76 +1878,76 @@ get_astronomy_opts = {
 astronomy_instance = IpgeolocationSdk::AstronomyApi.new
 begin 
     result = astronomy_instance.get_astronomy_details(get_astronomy_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling AstronomyApi: #{e}"
 end
 ```
 Sample Response
-```
-class AstronomyResponse {
-    location: class AstronomyLocation {
-        locationString: Milan, Italy
-        countryName: Italy
-        stateProv: Lombardy
-        city: Milan
-        locality: 
-        latitude: 45.46419
-        longitude: 9.18963
-        elevation: 122.0
-    }
-    astronomy: class Astronomy {
-        date: 2025-07-22
-        currentTime: 11:37:28.787
-        midNight: 01:29
-        nightEnd: 03:39
-        morning: class AstronomyMorning {
-            astronomicalTwilightBegin: 03:39
-            astronomicalTwilightEnd: 04:35
-            nauticalTwilightBegin: 04:35
-            nauticalTwilightEnd: 05:21
-            civilTwilightBegin: 05:21
-            civilTwilightEnd: 05:54
-            blueHourBegin: 05:06
-            blueHourEnd: 05:35
-            goldenHourBegin: 05:35
-            goldenHourEnd: 06:40
-        }
-        sunrise: 05:54
-        sunset: 21:04
-        evening: class AstronomyEvening {
-            goldenHourBegin: 20:19
-            goldenHourEnd: 21:24
-            blueHourBegin: 21:24
-            blueHourEnd: 21:52
-            civilTwilightBegin: 21:04
-            civilTwilightEnd: 21:38
-            nauticalTwilightBegin: 21:38
-            nauticalTwilightEnd: 22:23
-            astronomicalTwilightBegin: 22:23
-            astronomicalTwilightEnd: 23:18
-        }
-        nightBegin: 23:18
-        sunStatus: -
-        solarNoon: 13:29
-        dayLength: 15:10
-        sunAltitude: 55.76507063803926
-        sunDistance: 152012050.7566263
-        sunAzimuth: 128.26574664275847
-        moonPhase: WANING_CRESCENT
-        moonrise: 02:36
-        moonset: 19:49
-        moonStatus: -
-        moonAltitude: 72.39158071193661
-        moonDistance: 369861.22005060845
-        moonAzimuth: 197.31311454833428
-        moonParallacticAngle: 13.735730743087668
-        moonIlluminationPercentage: -7.39
-        moonAngle: 328.44782327106236
-    }
+```json
+{
+  "location": {
+    "location_string": "Milan, Italy",
+    "country_name": "Italy",
+    "state_prov": "Lombardy",
+    "city": "Milan",
+    "locality": "",
+    "latitude": "45.46419",
+    "longitude": "9.18963",
+    "elevation": "122"
+  },
+  "astronomy": {
+    "date": "2025-12-24",
+    "current_time": "13:59:22.914",
+    "mid_night": "00:22",
+    "night_end": "06:13",
+    "morning": {
+      "astronomical_twilight_begin": "06:13",
+      "astronomical_twilight_end": "06:49",
+      "nautical_twilight_begin": "06:49",
+      "nautical_twilight_end": "07:27",
+      "civil_twilight_begin": "07:27",
+      "civil_twilight_end": "07:59",
+      "blue_hour_begin": "07:14",
+      "blue_hour_end": "07:40",
+      "golden_hour_begin": "07:40",
+      "golden_hour_end": "08:51"
+    },
+    "sunrise": "07:59",
+    "sunset": "16:47",
+    "evening": {
+      "golden_hour_begin": "15:54",
+      "golden_hour_end": "17:05",
+      "blue_hour_begin": "17:05",
+      "blue_hour_end": "17:31",
+      "civil_twilight_begin": "16:47",
+      "civil_twilight_end": "17:18",
+      "nautical_twilight_begin": "17:18",
+      "nautical_twilight_end": "17:56",
+      "astronomical_twilight_begin": "17:56",
+      "astronomical_twilight_end": "18:32"
+    },
+    "night_begin": "18:32",
+    "sun_status": "-",
+    "solar_noon": "12:22",
+    "day_length": "08:47",
+    "sun_altitude": 17.723499498755025,
+    "sun_distance": 147152401.298336,
+    "sun_azimuth": 203.16933384107605,
+    "moon_phase": "WAXING_CRESCENT",
+    "moonrise": "10:55",
+    "moonset": "21:13",
+    "moon_status": "-",
+    "moon_altitude": 23.979142365657644,
+    "moon_distance": 390389.38303958566,
+    "moon_azimuth": 149.16011529114445,
+    "moon_parallactic_angle": -21.867682703140048,
+    "moon_illumination_percentage": "18.23",
+    "moon_angle": 50.55263020105739
+  }
 }
 ```
-### Astronomy for Specific Date
+### Lookup Astronomy API for a Specific Date
 ```ruby
 get_astronomy_opts = {
     date: "2025-01-01",
@@ -1825,76 +1957,76 @@ get_astronomy_opts = {
 astronomy_instance = IpgeolocationSdk::AstronomyApi.new
 begin 
     result = astronomy_instance.get_astronomy_details(get_astronomy_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling AstronomyApi: #{e}"
 end
 ```
 Sample Response
-```
-class AstronomyResponse {
-    location: class AstronomyLocation {
-        countryName: Australia
-        stateProv: Queensland
-        city: Brisbane
-        locality: Brisbane
-        latitude: -27.47000
-        longitude: 153.02000
-        elevation: 
-    }
-    astronomy: class Astronomy {
-        date: 2025-01-01
-        currentTime: 19:45:17.561
-        midNight: 23:51
-        nightEnd: 03:24
-        morning: class AstronomyMorning {
-            astronomicalTwilightBegin: 03:24
-            astronomicalTwilightEnd: 03:57
-            nauticalTwilightBegin: 03:57
-            nauticalTwilightEnd: 04:29
-            civilTwilightBegin: 04:29
-            civilTwilightEnd: 04:56
-            blueHourBegin: 04:19
-            blueHourEnd: 04:40
-            goldenHourBegin: 04:40
-            goldenHourEnd: 05:30
-        }
-        sunrise: 04:56
-        sunset: 18:46
-        evening: class AstronomyEvening {
-            goldenHourBegin: 18:12
-            goldenHourEnd: 19:02
-            blueHourBegin: 19:02
-            blueHourEnd: 19:23
-            civilTwilightBegin: 18:46
-            civilTwilightEnd: 19:13
-            nauticalTwilightBegin: 19:13
-            nauticalTwilightEnd: 19:45
-            astronomicalTwilightBegin: 19:45
-            astronomicalTwilightEnd: 20:18
-        }
-        nightBegin: 20:18
-        sunStatus: -
-        solarNoon: 11:51
-        dayLength: 13:50
-        sunAltitude: -12.059617608402677
-        sunDistance: 147102938.88036567
-        sunAzimuth: 235.897971324645
-        moonPhase: NEW_MOON
-        moonrise: 05:42
-        moonset: 20:08
-        moonStatus: -
-        moonAltitude: 4.6701693782344345
-        moonDistance: 380596.5823950267
-        moonAzimuth: 244.56945849604378
-        moonParallacticAngle: 118.21976701203934
-        moonIlluminationPercentage: 2.49
-        moonAngle: 18.156495178599695
-    }
+```json
+{
+  "location": {
+    "country_name": "Australia",
+    "state_prov": "Queensland",
+    "city": "Brisbane",
+    "locality": "Brisbane",
+    "latitude": "-27.47000",
+    "longitude": "153.02000",
+    "elevation": ""
+  },
+  "astronomy": {
+    "date": "2025-01-01",
+    "current_time": "23:00:08.526",
+    "mid_night": "23:51",
+    "night_end": "03:24",
+    "morning": {
+      "astronomical_twilight_begin": "03:24",
+      "astronomical_twilight_end": "03:57",
+      "nautical_twilight_begin": "03:57",
+      "nautical_twilight_end": "04:29",
+      "civil_twilight_begin": "04:29",
+      "civil_twilight_end": "04:56",
+      "blue_hour_begin": "04:19",
+      "blue_hour_end": "04:40",
+      "golden_hour_begin": "04:40",
+      "golden_hour_end": "05:30"
+    },
+    "sunrise": "04:56",
+    "sunset": "18:46",
+    "evening": {
+      "golden_hour_begin": "18:12",
+      "golden_hour_end": "19:02",
+      "blue_hour_begin": "19:02",
+      "blue_hour_end": "19:23",
+      "civil_twilight_begin": "18:46",
+      "civil_twilight_end": "19:13",
+      "nautical_twilight_begin": "19:13",
+      "nautical_twilight_end": "19:45",
+      "astronomical_twilight_begin": "19:45",
+      "astronomical_twilight_end": "20:18"
+    },
+    "night_begin": "20:18",
+    "sun_status": "-",
+    "solar_noon": "11:51",
+    "day_length": "13:50",
+    "sun_altitude": -38.0693479495629,
+    "sun_distance": 147102938.88036567,
+    "sun_azimuth": 195.11207186624287,
+    "moon_phase": "NEW_MOON",
+    "moonrise": "05:42",
+    "moonset": "20:08",
+    "moon_status": "-",
+    "moon_altitude": -28.36071812453645,
+    "moon_distance": 380161.8657228659,
+    "moon_azimuth": 216.5169650698993,
+    "moon_parallactic_angle": 144.6623797008263,
+    "moon_illumination_percentage": "2.97",
+    "moon_angle": 19.851650971629937
+  }
 }
 ```
 
-### Astronomy in Different Language
+### Lookup Location info in Different Language
 You can also get Astronomy Data in other languages as well. Only paid subscriptions can access this feature.
 ```ruby
 get_astronomy_opts = {
@@ -1904,224 +2036,84 @@ get_astronomy_opts = {
 astronomy_instance = IpgeolocationSdk::AstronomyApi.new
 begin 
     result = astronomy_instance.get_astronomy_details(get_astronomy_opts)
-    p result
+    puts result.to_hash.to_json
 rescue IpgeolocationSdk::ApiError => e
     puts "Error calling AstronomyApi: #{e}"
 end
 ```
 Sample Response
-```
-class AstronomyResponse {
-    ip: 1.1.1.1
-    location: class AstronomyLocation {
-        continentCode: OC
-        continentName: Océanie
-        countryCode2: AU
-        countryCode3: AUS
-        countryName: Australie
-        countryNameOfficial: 
-        isEu: false
-        stateProv: Queensland
-        stateCode: AU-QLD
-        district: Brisbane
-        city: Brisbane Sud
-        locality: 
-        zipcode: 4101
-        latitude: -27.47306
-        longitude: 153.01421
-        elevation: 
-    }
-    astronomy: class Astronomy {
-        date: 2025-07-22
-        currentTime: 19:54:32.920
-        midNight: 23:54
-        nightEnd: 05:13
-        morning: class AstronomyMorning {
-            astronomicalTwilightBegin: 05:13
-            astronomicalTwilightEnd: 05:41
-            nauticalTwilightBegin: 05:41
-            nauticalTwilightEnd: 06:09
-            civilTwilightBegin: 06:09
-            civilTwilightEnd: 06:34
-            blueHourBegin: 06:00
-            blueHourEnd: 06:19
-            goldenHourBegin: 06:19
-            goldenHourEnd: 07:08
-        }
-        sunrise: 06:34
-        sunset: 17:14
-        evening: class AstronomyEvening {
-            goldenHourBegin: 16:40
-            goldenHourEnd: 17:29
-            blueHourBegin: 17:29
-            blueHourEnd: 17:49
-            civilTwilightBegin: 17:14
-            civilTwilightEnd: 17:39
-            nauticalTwilightBegin: 17:39
-            nauticalTwilightEnd: 18:07
-            astronomicalTwilightBegin: 18:07
-            astronomicalTwilightEnd: 18:35
-        }
-        nightBegin: 18:35
-        sunStatus: -
-        solarNoon: 11:54
-        dayLength: 10:39
-        sunAltitude: -35.15165719378359
-        sunDistance: 152012050.75662628
-        sunAzimuth: 276.2757088601843
-        moonPhase: WANING_CRESCENT
-        moonrise: 04:04
-        moonset: 14:19
-        moonStatus: -
-        moonAltitude: -66.8771626746063
-        moonDistance: 369880.37618917384
-        moonAzimuth: 278.66762618741274
-        moonParallacticAngle: 93.79636599869248
-        moonIlluminationPercentage: -7.32
-        moonAngle: 328.6063710418327
-    }
-}
-```
-## Abuse Contact API Examples
-This section demonstrates how to use the `get_abuse_contact_info()` method of the AbuseContact API. This API helps security teams, hosting providers, and compliance professionals quickly identify the correct abuse reporting contacts for any IPv4 or IPv6 address. You can retrieve data like the responsible organization, role, contact emails, phone numbers, and address to take appropriate mitigation action against abusive or malicious activity.
-> **Note**: Abuse Contact API is only available in Advanced Plan
-
-Refer to the official [Abuse Contact API documentation](https://ipgeolocation.io/ip-abuse-contact-api.html#documentation-overview) for details on all available fields.
-### Lookup Abuse Contact by IP
-```ruby
-abuse_opts = {
-  ip: '1.0.0.0',
-}
-abuse_instance = IpgeolocationSdk::AbuseContactApi.new
-begin 
-    result = abuse_instance.get_abuse_contact_info(abuse_opts)
-    p result
-rescue IpgeolocationSdk::ApiError => e
-    puts "Error calling AbuseContactApi: #{e}"
-end
-```
-Sample Response:
-```
-class AbuseResponse {
-    ip: 1.0.0.0
-    abuse: class Abuse {
-        route: 1.0.0.0/24
-        country: AU
-        handle: IRT-APNICRANDNET-AU
-        name: IRT-APNICRANDNET-AU
-        organization: 
-        role: abuse
-        kind: group
-        address: PO Box 3646
-        South Brisbane, QLD 4101
-        Australia
-        emails: [helpdesk@apnic.net]
-        phoneNumbers: [+61 7 3858 3100]
-    }
-}
-```
-
-### Lookup Abuse Contact with Specific Fields
-```ruby
-abuse_opts = {
-  ip: '1.2.3.4',
-  fields: 'abuse.role,abuse.emails',
-}
-abuse_instance = IpgeolocationSdk::AbuseContactApi.new
-begin 
-    result = abuse_instance.get_abuse_contact_info(abuse_opts)
-    p result
-rescue IpgeolocationSdk::ApiError => e
-    puts "Error calling AbuseContactApi: #{e}"
-end
-```
-Sample Response:
-```
-class AbuseResponse {
-    ip: 1.2.3.4
-    abuse: class Abuse {
-        role: abuse
-        emails: [helpdesk@apnic.net]
-    }
-}
-```
-### Lookup Abuse Contact while Excluding Fields
-```ruby
-abuse_opts = {
-  ip: '9.9.9.9',
-  excludes: 'abuse.handle,abuse.emails',
-}
-abuse_instance = IpgeolocationSdk::AbuseContactApi.new
-begin 
-    result = abuse_instance.get_abuse_contact_info(abuse_opts)
-    p result
-rescue IpgeolocationSdk::ApiError => e
-    puts "Error calling AbuseContactApi: #{e}"
-end
-```
-Sample Response:
-```
-class AbuseResponse {
-    ip: 9.9.9.9
-    abuse: class Abuse {
-        route: 9.9.9.0/24
-        country:
-        name: Quad9 Abuse
-        organization: Quad9 Abuse
-        role: abuse
-        kind: group
-        address: 1442 A Walnut Street Ste 501
-        Berkeley
-        CA
-        94709
-        United States
-        phoneNumbers: [+1-415-831-3129]
-    }
+```json
+{
+  "ip": "1.1.1.1",
+  "location": {
+    "continent_code": "AS",
+    "continent_name": "Asie",
+    "country_code2": "HK",
+    "country_code3": "HKG",
+    "country_name": "Hong Kong",
+    "country_name_official": "",
+    "is_eu": false,
+    "state_prov": "Hong Kong Island",
+    "state_code": "",
+    "district": "",
+    "city": "Hong Kong",
+    "locality": "Soho",
+    "zipcode": "",
+    "latitude": "22.27683",
+    "longitude": "114.17612",
+    "elevation": ""
+  },
+  "astronomy": {
+    "date": "2025-12-24",
+    "mid_night": "00:22",
+    "...": "...",
+    "moon_angle": 50.57019974247744
+  }
 }
 ```
 
 ## Documentation for Models
 
- - [IpgeolocationSdk::ASNConnection](docs/ASNConnection.md)
- - [IpgeolocationSdk::ASNResponse](docs/ASNResponse.md)
- - [IpgeolocationSdk::ASNDetails](docs/ASNDetails.md)
- - [IpgeolocationSdk::Abuse](docs/Abuse.md)
- - [IpgeolocationSdk::AbuseResponse](docs/AbuseResponse.md)
- - [IpgeolocationSdk::Astronomy](docs/Astronomy.md)
- - [IpgeolocationSdk::AstronomyEvening](docs/AstronomyEvening.md)
- - [IpgeolocationSdk::AstronomyLocation](docs/AstronomyLocation.md)
- - [IpgeolocationSdk::AstronomyMorning](docs/AstronomyMorning.md)
- - [IpgeolocationSdk::AstronomyResponse](docs/AstronomyResponse.md)
- - [IpgeolocationSdk::CountryMetadata](docs/CountryMetadata.md)
- - [IpgeolocationSdk::Currency](docs/Currency.md)
- - [IpgeolocationSdk::ErrorResponse](docs/ErrorResponse.md)
- - [IpgeolocationSdk::GeolocationResponse](docs/GeolocationResponse.md)
- - [IpgeolocationSdk::BulkIPGeolocation](docs/BulkIPGeolocation.md)
- - [IpgeolocationSdk::BulkIPSecurity](docs/BulkIPSecurity.md)
- - [IpgeolocationSdk::Location](docs/Location.md)
- - [IpgeolocationSdk::LocationMinimal](docs/LocationMinimal.md)
- - [IpgeolocationSdk::Network](docs/Network.md)
- - [IpgeolocationSdk::NetworkAsn](docs/NetworkAsn.md)
- - [IpgeolocationSdk::NetworkCompany](docs/NetworkCompany.md)
- - [IpgeolocationSdk::NetworkMinimal](docs/NetworkMinimal.md)
- - [IpgeolocationSdk::NetworkMinimalAsn](docs/NetworkMinimalAsn.md)
- - [IpgeolocationSdk::NetworkMinimalCompany](docs/NetworkMinimalCompany.md)
- - [IpgeolocationSdk::ParseBulkUserAgentStringsRequest](docs/ParseBulkUserAgentStringsRequest.md)
- - [IpgeolocationSdk::Security](docs/Security.md)
- - [IpgeolocationSdk::SecurityAPIResponse](docs/SecurityAPIResponse.md)
- - [IpgeolocationSdk::TimeConversionResponse](docs/TimeConversionResponse.md)
- - [IpgeolocationSdk::TimeZone](docs/TimeZone.md)
- - [IpgeolocationSdk::TimeZoneDetailedResponse](docs/TimeZoneDetailedResponse.md)
- - [IpgeolocationSdk::TimeZoneDstEnd](docs/TimeZoneDstEnd.md)
- - [IpgeolocationSdk::TimeZoneDstStart](docs/TimeZoneDstStart.md)
- - [IpgeolocationSdk::TimezoneAirport](docs/TimezoneAirport.md)
- - [IpgeolocationSdk::TimezoneDetail](docs/TimezoneDetail.md)
- - [IpgeolocationSdk::TimezoneDetailDstEnd](docs/TimezoneDetailDstEnd.md)
- - [IpgeolocationSdk::TimezoneDetailDstStart](docs/TimezoneDetailDstStart.md)
- - [IpgeolocationSdk::TimezoneLocation](docs/TimezoneLocation.md)
- - [IpgeolocationSdk::TimezoneLocode](docs/TimezoneLocode.md)
- - [IpgeolocationSdk::UserAgentData](docs/UserAgentData.md)
- - [IpgeolocationSdk::UserAgentDataDevice](docs/UserAgentDataDevice.md)
- - [IpgeolocationSdk::UserAgentDataEngine](docs/UserAgentDataEngine.md)
- - [IpgeolocationSdk::UserAgentDataOperatingSystem](docs/UserAgentDataOperatingSystem.md)
+- [IpgeolocationSdk::ASNConnection](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/ASNConnection.md)
+- [IpgeolocationSdk::ASNResponse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/ASNResponse.md)
+- [IpgeolocationSdk::ASNDetails](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/ASNDetails.md)
+- [IpgeolocationSdk::Abuse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/Abuse.md)
+- [IpgeolocationSdk::AbuseResponse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AbuseResponse.md)
+- [IpgeolocationSdk::Astronomy](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/Astronomy.md)
+- [IpgeolocationSdk::AstronomyEvening](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AstronomyEvening.md)
+- [IpgeolocationSdk::AstronomyLocation](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AstronomyLocation.md)
+- [IpgeolocationSdk::AstronomyMorning](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AstronomyMorning.md)
+- [IpgeolocationSdk::AstronomyResponse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/AstronomyResponse.md)
+- [IpgeolocationSdk::CountryMetadata](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/CountryMetadata.md)
+- [IpgeolocationSdk::Currency](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/Currency.md)
+- [IpgeolocationSdk::ErrorResponse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/ErrorResponse.md)
+- [IpgeolocationSdk::GeolocationResponse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/GeolocationResponse.md)
+- [IpgeolocationSdk::BulkIPGeolocation](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/BulkIPGeolocation.md)
+- [IpgeolocationSdk::BulkIPSecurity](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/BulkIPSecurity.md)
+- [IpgeolocationSdk::Location](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/Location.md)
+- [IpgeolocationSdk::LocationMinimal](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/LocationMinimal.md)
+- [IpgeolocationSdk::Network](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/Network.md)
+- [IpgeolocationSdk::NetworkAsn](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/NetworkAsn.md)
+- [IpgeolocationSdk::NetworkCompany](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/NetworkCompany.md)
+- [IpgeolocationSdk::NetworkMinimal](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/NetworkMinimal.md)
+- [IpgeolocationSdk::NetworkMinimalAsn](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/NetworkMinimalAsn.md)
+- [IpgeolocationSdk::NetworkMinimalCompany](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/NetworkMinimalCompany.md)
+- [IpgeolocationSdk::ParseBulkUserAgentStringsRequest](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/ParseBulkUserAgentStringsRequest.md)
+- [IpgeolocationSdk::Security](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/Security.md)
+- [IpgeolocationSdk::SecurityAPIResponse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/SecurityAPIResponse.md)
+- [IpgeolocationSdk::TimeConversionResponse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimeConversionResponse.md)
+- [IpgeolocationSdk::TimeZone](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimeZone.md)
+- [IpgeolocationSdk::TimeZoneDetailedResponse](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimeZoneDetailedResponse.md)
+- [IpgeolocationSdk::TimeZoneDstEnd](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimeZoneDstEnd.md)
+- [IpgeolocationSdk::TimeZoneDstStart](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimeZoneDstStart.md)
+- [IpgeolocationSdk::TimezoneAirport](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimezoneAirport.md)
+- [IpgeolocationSdk::TimezoneDetail](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimezoneDetail.md)
+- [IpgeolocationSdk::TimezoneDetailDstEnd](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimezoneDetailDstEnd.md)
+- [IpgeolocationSdk::TimezoneDetailDstStart](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimezoneDetailDstStart.md)
+- [IpgeolocationSdk::TimezoneLocation](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimezoneLocation.md)
+- [IpgeolocationSdk::TimezoneLocode](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/TimezoneLocode.md)
+- [IpgeolocationSdk::UserAgentData](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/UserAgentData.md)
+- [IpgeolocationSdk::UserAgentDataDevice](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/UserAgentDataDevice.md)
+- [IpgeolocationSdk::UserAgentDataEngine](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/UserAgentDataEngine.md)
+- [IpgeolocationSdk::UserAgentDataOperatingSystem](https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/HEAD/docs/UserAgentDataOperatingSystem.md)
 
