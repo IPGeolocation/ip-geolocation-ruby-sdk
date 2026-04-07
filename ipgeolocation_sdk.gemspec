@@ -1,4 +1,3 @@
-# ipgeolocation.gemspec
 require_relative "lib/ipgeolocation_sdk/version"
 
 Gem::Specification.new do |s|
@@ -8,22 +7,39 @@ Gem::Specification.new do |s|
   s.authors     = ["IPGeolocation.io"]
   s.email       = ["support@ipgeolocation.io"]
   s.homepage    = "https://ipgeolocation.io"
-  s.summary     = "Official Ruby SDK for IPGeolocation.io APIs"
-  s.description = "A Ruby wrapper for the IPGeolocation.io API suite, providing geolocation, ip security, timezone, currency, user-agent, and other IP intelligence features. Easily integrate IP data into your Ruby applications."  
+  s.summary     = "Official Ruby SDK for the IPGeolocation.io IP Location API"
+  s.description = "Ruby SDK for IPGeolocation.io single and bulk IP geolocation lookups with typed and raw responses."
   s.license     = "MIT"
   s.required_ruby_version = ">= 2.7"
 
   s.metadata = {
     "homepage_uri" => s.homepage,
-    "source_code_uri" => "https://github.com/IPGeolocation/ip-geolocation-ruby-sdk", 
-    "bug_tracker_uri" => "https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/issues" 
+    "source_code_uri" => "https://github.com/IPGeolocation/ip-geolocation-ruby-sdk",
+    "bug_tracker_uri" => "https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/issues",
+    "changelog_uri" => "https://github.com/IPGeolocation/ip-geolocation-ruby-sdk/blob/main/CHANGELOG.md",
+    "rubygems_mfa_required" => "true"
   }
 
-  s.add_runtime_dependency 'typhoeus', '~> 1.0', '>= 1.0.1'
-  s.add_development_dependency 'rspec', '~> 3.6', '>= 3.6.0'
+  s.add_development_dependency "rake", "~> 13.0"
+  s.add_development_dependency "rspec", "~> 3.13"
 
-  s.files         = `find *`.split("\n").uniq.sort.select { |f| !f.empty? }
-  s.test_files    = `find spec/*`.split("\n")
+  s.files = [
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "lib/ipgeolocation_sdk.rb",
+    "lib/ipgeolocation_sdk/client.rb",
+    "lib/ipgeolocation_sdk/client_config.rb",
+    "lib/ipgeolocation_sdk/enums.rb",
+    "lib/ipgeolocation_sdk/errors.rb",
+    "lib/ipgeolocation_sdk/json_output.rb",
+    "lib/ipgeolocation_sdk/models.rb",
+    "lib/ipgeolocation_sdk/request_models.rb",
+    "lib/ipgeolocation_sdk/serde.rb",
+    "lib/ipgeolocation_sdk/transport.rb",
+    "lib/ipgeolocation_sdk/value_object.rb",
+    "lib/ipgeolocation_sdk/version.rb"
+  ]
   s.executables   = []
   s.require_paths = ["lib"]
 end

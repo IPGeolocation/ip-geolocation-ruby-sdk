@@ -1,2 +1,2 @@
---color
 --require spec_helper
+--pattern spec/ip_location/**/*_spec.rb
