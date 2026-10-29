@@ -1,6 +1,6 @@
 # IPGeolocation Ruby SDK
 
-Official Ruby SDK for the IPGeolocation.io IP Location API.
+Official Ruby SDK for the IPGeolocation.io IP Geolocation API.
 
 Look up IPv4, IPv6, and domains with `/v3/ipgeo` and `/v3/ipgeo-bulk`. Get geolocation, company, ASN, timezone, network, hostname, abuse, user-agent, and security data from one API.
 
