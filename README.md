@@ -1,4 +1,4 @@
-# IPGeolocation Ruby SDK
+# IPGeolocation.io Ruby SDK
 
 Official Ruby SDK for the IPGeolocation.io IP Geolocation API.
 
@@ -93,7 +93,7 @@ You can also pass `LookupIpGeolocationRequest` and `BulkLookupIpGeolocationReque
 
 ## Get Your API Key
 
-To use most SDK features, create or access your IPGeolocation account and copy an API key from your dashboard.
+To use most SDK features, create or access your IPGeolocation.io account and copy an API key from your dashboard.
 
 1. Sign up: <https://app.ipgeolocation.io/signup>
 2. Verify your email if prompted
