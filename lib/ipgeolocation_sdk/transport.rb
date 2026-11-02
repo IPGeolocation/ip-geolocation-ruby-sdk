@@ -15,6 +15,16 @@ module IpgeolocationSdk
 
   class NetHttpTransport
     DEFAULT_MAX_RESPONSE_BODY_CHARS = 128 * 1024 * 1024
+    INCOMPLETE_UTF8 = /(?:
+      [\xC2-\xDF] |
+      \xE0[\xA0-\xBF]? |
+      [\xE1-\xEC\xEE-\xEF][\x80-\xBF]? |
+      \xED[\x80-\x9F]? |
+      \xF0(?:[\x90-\xBF][\x80-\xBF]?)? |
+      [\xF1-\xF3][\x80-\xBF]{0,2} |
+      \xF4(?:[\x80-\x8F][\x80-\xBF]?)?
+    )\z/nx.freeze
+    private_constant :INCOMPLETE_UTF8
 
     def initialize(max_response_body_chars: DEFAULT_MAX_RESPONSE_BODY_CHARS)
       raise ArgumentError, "max_response_body_chars must be a positive integer" unless max_response_body_chars.is_a?(Integer) && max_response_body_chars.positive?
@@ -79,11 +89,11 @@ module IpgeolocationSdk
     end
 
     def read_response_body(response)
-      decoder = Encoding::Converter.new(Encoding::UTF_8, Encoding::UTF_16LE, invalid: :replace, undef: :replace)
       body = String.new(encoding: Encoding::UTF_8)
+      pending = String.new(encoding: Encoding::BINARY)
       size = 0
       append = lambda do |text|
-        normalized = text.encode(Encoding::UTF_8)
+        normalized = text.force_encoding(Encoding::UTF_8).scrub
         size += normalized.length
         if size > @max_response_body_chars
           raise TransportError, "Response body exceeded max size of #{@max_response_body_chars} characters"
@@ -92,9 +102,11 @@ module IpgeolocationSdk
       end
 
       response.read_body do |chunk|
-        append.call(decoder.convert(chunk.to_s.b))
+        bytes = pending << chunk.to_s.b
+        pending = bytes.slice!(INCOMPLETE_UTF8) || String.new(encoding: Encoding::BINARY)
+        append.call(bytes)
       end
-      append.call(decoder.finish)
+      append.call(pending)
 
       body
     end

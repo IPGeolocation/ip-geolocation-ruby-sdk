@@ -44,6 +44,36 @@ RSpec.describe IpgeolocationSdk::NetHttpTransport do
     expect(stream_response(["a\xFFb\xE6".b, "\x9D".b])).to eq("a\uFFFDb\uFFFD")
   end
 
+  it "preserves valid text adjacent to consecutive malformed sequences" do
+    bytes = [0x8d, 0xdf, 0x61].pack("C*")
+    expect(stream_response([bytes])).to eq("\uFFFD\uFFFDa")
+    expect(stream_response(bytes.bytes.map { |byte| byte.chr(Encoding::BINARY) })).to eq("\uFFFD\uFFFDa")
+  end
+
+  it "handles invalid UTF-8 prefixes without dropping following text" do
+    [[0xe0, 0x80], [0xed, 0xa0], [0xf0, 0x80], [0xf4, 0x90]].each do |prefix|
+      bytes = (prefix + [0x61]).pack("C*")
+      expected = bytes.dup.force_encoding(Encoding::UTF_8).scrub
+      expect(stream_response(bytes.bytes.map { |byte| byte.chr(Encoding::BINARY) })).to eq(expected)
+    end
+  end
+
+  it "matches whole-body UTF-8 replacement for arbitrary bytes and chunk boundaries" do
+    random = Random.new(1234)
+    100.times do
+      bytes = Array.new(random.rand(1..100)) { random.rand(256) }.pack("C*")
+      chunks = []
+      offset = 0
+      while offset < bytes.bytesize
+        chunk = bytes.byteslice(offset, random.rand(1..8))
+        chunks << chunk
+        offset += chunk.bytesize
+      end
+      expected = bytes.dup.force_encoding(Encoding::UTF_8).scrub
+      expect(stream_response(chunks, limit: expected.length)).to eq(expected)
+    end
+  end
+
   it "includes the replacement for an incomplete final character in the limit" do
     expect { stream_response(["a\xE6\x9D".b], limit: 1) }
       .to raise_error(IpgeolocationSdk::TransportError, "Response body exceeded max size of 1 characters")
