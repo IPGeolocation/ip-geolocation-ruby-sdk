@@ -26,6 +26,10 @@ module IpgeolocationSdk
       )
     end
 
+    def inspect
+      "#<#{self.class} #{to_h(mode: JsonOutputMode::FULL).inspect}>"
+    end
+
     private
 
     def normalize_api_key(value)

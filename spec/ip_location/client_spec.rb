@@ -85,6 +85,17 @@ RSpec.describe IpgeolocationSdk::IpGeolocationClient do
     )
   end
 
+  it "does not inspect request data retained by a custom transport" do
+    response = IpgeolocationSdk::HttpResponseData.new(status_code: 200, body: "{}", headers: {})
+    transport = RecordingTransport.new(response)
+    client = described_class.new(config, transport)
+    client.lookup_ip_geolocation
+
+    expect(transport.requests.first.url).to include("apiKey=paid-key")
+    expect(client.inspect).not_to include("paid-key")
+    expect(client.inspect).to include("[REDACTED]")
+  end
+
   it "requires api_key for bulk lookup" do
     client = described_class.new(api_key: nil, request_origin: "https://ipgeolocation.io", base_url: config.base_url)
 

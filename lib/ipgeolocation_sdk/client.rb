@@ -28,6 +28,10 @@ module IpgeolocationSdk
 
     attr_reader :config
 
+    def inspect
+      "#<#{self.class} config=#{@config.inspect} closed=#{@closed}>"
+    end
+
     def lookup_ip_geolocation(request = nil)
       ensure_open
       typed_request = to_lookup_request(request)

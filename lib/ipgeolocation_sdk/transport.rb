@@ -15,6 +15,16 @@ module IpgeolocationSdk
 
   class NetHttpTransport
     DEFAULT_MAX_RESPONSE_BODY_CHARS = 128 * 1024 * 1024
+    INCOMPLETE_UTF8 = /(?:
+      [\xC2-\xDF] |
+      \xE0[\xA0-\xBF]? |
+      [\xE1-\xEC\xEE-\xEF][\x80-\xBF]? |
+      \xED[\x80-\x9F]? |
+      \xF0(?:[\x90-\xBF][\x80-\xBF]?)? |
+      [\xF1-\xF3][\x80-\xBF]{0,2} |
+      \xF4(?:[\x80-\x8F][\x80-\xBF]?)?
+    )\z/nx.freeze
+    private_constant :INCOMPLETE_UTF8
 
     def initialize(max_response_body_chars: DEFAULT_MAX_RESPONSE_BODY_CHARS)
       raise ArgumentError, "max_response_body_chars must be a positive integer" unless max_response_body_chars.is_a?(Integer) && max_response_body_chars.positive?
@@ -29,9 +39,10 @@ module IpgeolocationSdk
       http.open_timeout = request.connect_timeout
       http.read_timeout = request.read_timeout
 
-      response = http.request(build_net_http_request(uri, request))
-      body = response.body
-      body = body.nil? ? read_response_body(response) : normalize_response_text(body.to_s)
+      body = nil
+      response = http.request(build_net_http_request(uri, request)) do |stream|
+        body = read_response_body(stream)
+      end
 
       HttpResponseData.new(
         status_code: response.code.to_i,
@@ -78,22 +89,26 @@ module IpgeolocationSdk
     end
 
     def read_response_body(response)
-      body_parts = []
+      body = String.new(encoding: Encoding::UTF_8)
+      pending = String.new(encoding: Encoding::BINARY)
+      size = 0
+      append = lambda do |text|
+        normalized = text.force_encoding(Encoding::UTF_8).scrub
+        size += normalized.length
+        if size > @max_response_body_chars
+          raise TransportError, "Response body exceeded max size of #{@max_response_body_chars} characters"
+        end
+        body << normalized
+      end
 
       response.read_body do |chunk|
-        body_parts << normalize_response_text(chunk.to_s)
+        bytes = pending << chunk.to_s.b
+        pending = bytes.slice!(INCOMPLETE_UTF8) || String.new(encoding: Encoding::BINARY)
+        append.call(bytes)
       end
+      append.call(pending)
 
-      body_parts.join
-    end
-
-    def normalize_response_text(text)
-      normalized = text.encode(Encoding::UTF_8, invalid: :replace, undef: :replace)
-      if normalized.length > @max_response_body_chars
-        raise TransportError, "Response body exceeded max size of #{@max_response_body_chars} characters"
-      end
-
-      normalized
+      body
     end
 
     def normalize_headers(headers)

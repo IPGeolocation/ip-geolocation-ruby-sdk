@@ -2,3 +2,6 @@
 .gems/
 *.gem
 spec/examples.txt
+Gemfile.lock
+vendor/
+pkg/

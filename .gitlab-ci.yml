@@ -3,7 +3,7 @@
     LANG: "C.UTF-8"
   before_script:
     - ruby -v
-    - bundle config set --local deployment true
+    - bundle config set --local path vendor/bundle
     - bundle install -j $(nproc)
   parallel:
     matrix:
@@ -11,7 +11,7 @@
   image: "ruby:$RUBY_VERSION"
   cache:
     paths:
-      - vendor/ruby
+      - vendor/bundle
     key: 'ruby-$RUBY_VERSION'
 
 gem:
