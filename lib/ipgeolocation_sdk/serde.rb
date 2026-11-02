@@ -164,6 +164,7 @@ module IpgeolocationSdk
           item = value.public_send(name)
           next if normalized_mode == JsonOutputMode::COMPACT && item.nil?
 
+          item = "[REDACTED]" if value.is_a?(IpGeolocationClientConfig) && name == :api_key && !item.nil?
           result[name.to_s] = to_plain_data(item, normalized_mode)
         end
       when Array

@@ -8,13 +8,15 @@ RSpec.describe IpgeolocationSdk::NetHttpTransport do
       body: "{\"ip\":\"8.8.8.8\"}",
       to_hash: { "x-test" => ["ok"] }
     )
+    allow(response).to receive(:read_body).and_yield("{\"ip\":\"8.8.8.8\"}".b)
+    expect(response).not_to receive(:body)
 
     http = instance_double("Net::HTTP")
     allow(Net::HTTP).to receive(:new).with("api.ipgeolocation.io", 443).and_return(http)
     allow(http).to receive(:use_ssl=).with(true)
     allow(http).to receive(:open_timeout=).with(5.0)
     allow(http).to receive(:read_timeout=).with(10.0)
-    allow(http).to receive(:request).and_return(response)
+    allow(http).to receive(:request).and_yield(response).and_return(response)
 
     request = IpgeolocationSdk::HttpRequestData.new(
       url: "https://api.ipgeolocation.io/v3/ipgeo?ip=8.8.8.8",

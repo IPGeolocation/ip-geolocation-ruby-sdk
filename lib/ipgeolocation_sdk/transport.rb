@@ -29,9 +29,10 @@ module IpgeolocationSdk
       http.open_timeout = request.connect_timeout
       http.read_timeout = request.read_timeout
 
-      response = http.request(build_net_http_request(uri, request))
-      body = response.body
-      body = body.nil? ? read_response_body(response) : normalize_response_text(body.to_s)
+      body = nil
+      response = http.request(build_net_http_request(uri, request)) do |stream|
+        body = read_response_body(stream)
+      end
 
       HttpResponseData.new(
         status_code: response.code.to_i,
@@ -78,22 +79,24 @@ module IpgeolocationSdk
     end
 
     def read_response_body(response)
-      body_parts = []
+      decoder = Encoding::Converter.new(Encoding::UTF_8, Encoding::UTF_16LE, invalid: :replace, undef: :replace)
+      body = String.new(encoding: Encoding::UTF_8)
+      size = 0
+      append = lambda do |text|
+        normalized = text.encode(Encoding::UTF_8)
+        size += normalized.length
+        if size > @max_response_body_chars
+          raise TransportError, "Response body exceeded max size of #{@max_response_body_chars} characters"
+        end
+        body << normalized
+      end
 
       response.read_body do |chunk|
-        body_parts << normalize_response_text(chunk.to_s)
+        append.call(decoder.convert(chunk.to_s.b))
       end
+      append.call(decoder.finish)
 
-      body_parts.join
-    end
-
-    def normalize_response_text(text)
-      normalized = text.encode(Encoding::UTF_8, invalid: :replace, undef: :replace)
-      if normalized.length > @max_response_body_chars
-        raise TransportError, "Response body exceeded max size of #{@max_response_body_chars} characters"
-      end
-
-      normalized
+      body
     end
 
     def normalize_headers(headers)

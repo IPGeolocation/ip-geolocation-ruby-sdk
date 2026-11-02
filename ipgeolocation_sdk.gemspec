@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rake", "~> 13.0"
   s.add_development_dependency "rspec", "~> 3.13"
+  s.add_development_dependency "bigdecimal", ">= 1.4"
 
   s.files = [
     "CHANGELOG.md",

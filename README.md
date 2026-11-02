@@ -331,7 +331,7 @@ puts IpgeolocationSdk.to_pretty_json(response.data)
 puts IpgeolocationSdk.to_pretty_json(response.data, :full)
 ```
 
-Compact mode omits `nil` fields. Full mode keeps them.
+Compact mode omits `nil` fields. Full mode keeps them. When serializing a client configuration, both modes replace its API key with `[REDACTED]`. The original key remains available through `config.api_key` and is used for authentication.
 
 ## Errors
 
