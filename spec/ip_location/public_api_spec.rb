@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe "IpgeolocationSdk public API" do
   it "exposes the current gem version" do
-    expect(IpgeolocationSdk::VERSION).to eq("2.0.1")
+    expect(IpgeolocationSdk::VERSION).to eq("2.0.2")
   end
 
   it "serializes value objects through the module helpers" do

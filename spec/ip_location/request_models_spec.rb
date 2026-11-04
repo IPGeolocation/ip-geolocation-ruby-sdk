@@ -54,3 +54,17 @@ RSpec.describe IpgeolocationSdk::BulkLookupIpGeolocationRequest do
     end.to raise_error(IpgeolocationSdk::ValidationError, "header values must not contain CR or LF")
   end
 end
+
+RSpec.describe IpgeolocationSdk::Language do
+  it "accepts Arabic alongside the existing language codes" do
+    expect(described_class::AR).to eq("ar")
+    (described_class::VALUES + [" AR ", :AR]).each do |language|
+      expect(described_class.valid?(language)).to eq(true)
+      expected = language.to_s.strip.downcase
+      expect(IpgeolocationSdk::LookupIpGeolocationRequest.new(lang: language).lang).to eq(expected)
+      expect(IpgeolocationSdk::BulkLookupIpGeolocationRequest.new(ips: ["8.8.8.8"], lang: language).lang).to eq(expected)
+    end
+    expect(described_class.valid?("unknown")).to eq(false)
+    expect { described_class.from_code("unknown") }.to raise_error(IpgeolocationSdk::ValidationError)
+  end
+end
