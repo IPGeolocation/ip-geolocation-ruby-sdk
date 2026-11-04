@@ -150,7 +150,7 @@ RSpec.describe "Client error redaction" do
   end
 
   it "uses the current API key when the configuration string changes" do
-    client.config.api_key.replace("rotated-test-key")
+    client.config.api_key.replace("  rotated-test-key  ")
     allow(transport).to receive(:send_request) do |request|
       expect(request.url).to include("apiKey=rotated-test-key")
       response(401, JSON.generate({ message: "Rejected rotated-test-key" }))

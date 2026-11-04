@@ -33,7 +33,7 @@ module IpgeolocationSdk
     end
 
     def lookup_ip_geolocation(request = nil)
-      api_key = @config.api_key&.dup
+      api_key = @config.api_key&.strip
       redactor = ErrorRedactor.new(api_key)
       ensure_open
       typed_request = to_lookup_request(request)
@@ -54,7 +54,7 @@ module IpgeolocationSdk
     end
 
     def lookup_ip_geolocation_raw(request = nil)
-      api_key = @config.api_key&.dup
+      api_key = @config.api_key&.strip
       redactor = ErrorRedactor.new(api_key)
       ensure_open
       typed_request = to_lookup_request(request)
@@ -74,7 +74,7 @@ module IpgeolocationSdk
     end
 
     def bulk_lookup_ip_geolocation(request)
-      api_key = @config.api_key&.dup
+      api_key = @config.api_key&.strip
       redactor = ErrorRedactor.new(api_key)
       ensure_open
       typed_request = to_bulk_request(request)
@@ -95,7 +95,7 @@ module IpgeolocationSdk
     end
 
     def bulk_lookup_ip_geolocation_raw(request)
-      api_key = @config.api_key&.dup
+      api_key = @config.api_key&.strip
       redactor = ErrorRedactor.new(api_key)
       ensure_open
       typed_request = to_bulk_request(request)
