@@ -33,61 +33,85 @@ module IpgeolocationSdk
     end
 
     def lookup_ip_geolocation(request = nil)
+      api_key = @config.api_key&.strip
+      redactor = ErrorRedactor.new(api_key)
       ensure_open
       typed_request = to_lookup_request(request)
       validate_lookup_request_base
       Serde.validate_json_output(typed_request.output)
 
-      response, duration_ms = execute_with_metrics(build_lookup_http_request(typed_request))
-      raise Serde.to_api_error(response.status_code, response.body) unless success_status?(response.status_code)
+      response, duration_ms = execute_with_metrics(build_lookup_http_request(typed_request, api_key))
+      raise Serde.to_api_error(response.status_code, response.body, redactor) unless success_status?(response.status_code)
 
       ApiResponse.new(
         data: Serde.parse_single_lookup(response.body),
         metadata: Serde.to_metadata(response.status_code, duration_ms, response.headers)
       )
+    rescue StandardError => error
+      raise if api_key.nil?
+
+      raise redactor.copy(error), cause: nil
     end
 
     def lookup_ip_geolocation_raw(request = nil)
+      api_key = @config.api_key&.strip
+      redactor = ErrorRedactor.new(api_key)
       ensure_open
       typed_request = to_lookup_request(request)
       validate_lookup_request_base
 
-      response, duration_ms = execute_with_metrics(build_lookup_http_request(typed_request))
-      raise Serde.to_api_error(response.status_code, response.body) unless success_status?(response.status_code)
+      response, duration_ms = execute_with_metrics(build_lookup_http_request(typed_request, api_key))
+      raise Serde.to_api_error(response.status_code, response.body, redactor) unless success_status?(response.status_code)
 
       ApiResponse.new(
         data: response.body,
         metadata: Serde.to_metadata(response.status_code, duration_ms, response.headers)
       )
+    rescue StandardError => error
+      raise if api_key.nil?
+
+      raise redactor.copy(error), cause: nil
     end
 
     def bulk_lookup_ip_geolocation(request)
+      api_key = @config.api_key&.strip
+      redactor = ErrorRedactor.new(api_key)
       ensure_open
       typed_request = to_bulk_request(request)
       validate_bulk_request_base
       Serde.validate_json_output(typed_request.output)
 
-      response, duration_ms = execute_with_metrics(build_bulk_http_request(typed_request))
-      raise Serde.to_api_error(response.status_code, response.body) unless success_status?(response.status_code)
+      response, duration_ms = execute_with_metrics(build_bulk_http_request(typed_request, api_key))
+      raise Serde.to_api_error(response.status_code, response.body, redactor) unless success_status?(response.status_code)
 
       ApiResponse.new(
-        data: Serde.parse_bulk_lookup(response.body),
+        data: Serde.parse_bulk_lookup(response.body, redactor),
         metadata: Serde.to_metadata(response.status_code, duration_ms, response.headers)
       )
+    rescue StandardError => error
+      raise if api_key.nil?
+
+      raise redactor.copy(error), cause: nil
     end
 
     def bulk_lookup_ip_geolocation_raw(request)
+      api_key = @config.api_key&.strip
+      redactor = ErrorRedactor.new(api_key)
       ensure_open
       typed_request = to_bulk_request(request)
       validate_bulk_request_base
 
-      response, duration_ms = execute_with_metrics(build_bulk_http_request(typed_request))
-      raise Serde.to_api_error(response.status_code, response.body) unless success_status?(response.status_code)
+      response, duration_ms = execute_with_metrics(build_bulk_http_request(typed_request, api_key))
+      raise Serde.to_api_error(response.status_code, response.body, redactor) unless success_status?(response.status_code)
 
       ApiResponse.new(
         data: response.body,
         metadata: Serde.to_metadata(response.status_code, duration_ms, response.headers)
       )
+    rescue StandardError => error
+      raise if api_key.nil?
+
+      raise redactor.copy(error), cause: nil
     end
 
     def close
@@ -140,10 +164,10 @@ module IpgeolocationSdk
       end
     end
 
-    def build_lookup_http_request(request)
+    def build_lookup_http_request(request, api_key)
       output = request.output || ResponseFormat::JSON
       query = Serde.build_query(
-        "apiKey" => @config.api_key,
+        "apiKey" => api_key,
         "ip" => request.ip,
         "lang" => request.lang,
         "include" => request.include.empty? ? nil : request.include.join(","),
@@ -175,10 +199,10 @@ module IpgeolocationSdk
       )
     end
 
-    def build_bulk_http_request(request)
+    def build_bulk_http_request(request, api_key)
       output = request.output || ResponseFormat::JSON
       query = Serde.build_query(
-        "apiKey" => @config.api_key,
+        "apiKey" => api_key,
         "lang" => request.lang,
         "include" => request.include.empty? ? nil : request.include.join(","),
         "fields" => request.fields.empty? ? nil : request.fields.join(","),

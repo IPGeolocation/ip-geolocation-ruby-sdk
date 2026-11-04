@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.2
+
+- Hide API keys in request errors and typed bulk error messages.
+- Preserve HTTP error types and status codes when error responses are incomplete or invalid.
+- Add Arabic (`ar`) for single and bulk lookups.
+
+Existing public methods and Ruby 2.7+ support remain unchanged.
+
 ## 2.0.1
 
 - Mask API keys in configuration serialization and client/config inspection.

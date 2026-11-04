@@ -14,7 +14,7 @@ module IpgeolocationSdk
       parse_ip_geolocation_response(payload)
     end
 
-    def parse_bulk_lookup(body)
+    def parse_bulk_lookup(body, redactor = nil)
       payload = parse_json(body, "Failed to deserialize bulk lookup response")
       unless payload.is_a?(Array)
         raise SerializationError, "Failed to deserialize bulk response: expected an array payload"
@@ -22,8 +22,10 @@ module IpgeolocationSdk
 
       payload.map do |item|
         if bulk_error_item?(item)
+          message = string_or_nil(item["message"])
+          message = redactor.text(message) unless redactor.nil?
           BulkLookupError.new(
-            error: BulkLookupErrorDetails.new(message: string_or_nil(item["message"]))
+            error: BulkLookupErrorDetails.new(message: message)
           )
         else
           raise SerializationError, "Failed to deserialize API response" unless item.is_a?(Hash)
@@ -83,8 +85,8 @@ module IpgeolocationSdk
       raise ValidationError, "XML output is not supported by typed methods. Use ResponseFormat::JSON."
     end
 
-    def to_api_error(status_code, body)
-      api_message = extract_api_message(body)
+    def to_api_error(status_code, body, redactor = nil)
+      api_message = extract_api_message(body, redactor)
       message =
         if api_message.nil?
           "API request failed with HTTP status #{status_code}"
@@ -110,22 +112,25 @@ module IpgeolocationSdk
       klass.new(message, status_code, api_message)
     end
 
-    def extract_api_message(body)
+    def extract_api_message(body, redactor = nil)
       return nil if body.nil?
 
       normalized = body.to_s.strip
       return nil if normalized.empty?
 
+      fallback = (redactor.nil? ? normalized : redactor.text(normalized))[0, 512]
       payload = JSON.parse(normalized)
-      return normalized[0, 512] unless payload.is_a?(Hash)
+      return fallback unless payload.is_a?(Hash)
 
       message = payload["message"]
       if message.nil? && payload["error"].is_a?(Hash)
         message = payload["error"]["message"]
       end
-      string_or_nil(message) || normalized[0, 512]
+      return fallback unless message.is_a?(String)
+
+      redactor.nil? ? message : redactor.text(message)
     rescue JSON::ParserError
-      normalized[0, 512]
+      fallback
     end
 
     def parse_int_header(value)

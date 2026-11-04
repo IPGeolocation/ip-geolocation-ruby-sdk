@@ -86,7 +86,7 @@ You can also pass `LookupIpGeolocationRequest` and `BulkLookupIpGeolocationReque
 | Supported Endpoints | `/v3/ipgeo`, `/v3/ipgeo-bulk` |
 | Supported Inputs | IPv4, IPv6, domain |
 | Main Data Returned | Geolocation, company, ASN, time zone, network, hostname, abuse, user-agent, currency, security |
-| Authentication | API key, request-origin auth for `/v3/ipgeo` only |
+| Authentication | API key |
 | Response Formats | Structured JSON, raw JSON, raw XML |
 | Bulk Limit | Up to 50,000 IPs or domains per request |
 | Transport | `Net::HTTP` |
@@ -101,7 +101,7 @@ To use most SDK features, create or access your IPGeolocation.io account and cop
 4. Open your dashboard: <https://app.ipgeolocation.io/dashboard>
 5. Copy an API key from the `API Keys` section
 
-For server-side code, keep the API key in an environment variable or secret manager. For browser-based single lookups on paid plans, use request-origin auth instead of exposing an API key in frontend code.
+Keep the API key in an environment variable or secret manager.
 
 ## Authentication
 
@@ -113,21 +113,7 @@ client = IpgeolocationSdk::IpGeolocationClient.new(
 )
 ```
 
-### Request-Origin Auth
-
-```ruby
-client = IpgeolocationSdk::IpGeolocationClient.new(
-  request_origin: "https://app.example.com"
-)
-```
-
-`request_origin` must be an absolute `http` or `https` origin with no path, query string, fragment, or userinfo.
-
-> [!IMPORTANT]
-> Request-origin auth does not work with `/v3/ipgeo-bulk`. Bulk lookup always requires `api_key`.
-
-> [!NOTE]
-> If you set both `api_key` and `request_origin`, single lookup still uses the API key. The API key is sent as the `apiKey` query parameter, so avoid logging full request URLs.
+The API key is sent as the `apiKey` query parameter, so avoid logging full request URLs.
 
 ## Plan Behavior
 
@@ -139,7 +125,6 @@ Feature availability depends on your plan and request parameters.
 | Domain lookup | Not supported | Supported |
 | Bulk lookup | Not supported | Supported |
 | Non-English `lang` | Not supported | Supported |
-| Request-origin auth | Not supported | Supported for `/v3/ipgeo` only |
 | Optional modules via `include` | Not supported | Supported |
 | `include: ["*"]` | Base response only | All plan-available modules |
 
@@ -149,8 +134,7 @@ Paid plans still need `include` for optional modules. `fields` and `excludes` on
 
 | Field | Type | Default | Notes |
 |-------|------|---------|-------|
-| `api_key` | `String` | unset | Required for bulk lookup. Optional for single lookup if `request_origin` is set. |
-| `request_origin` | `String` | unset | Must be an absolute `http` or `https` origin. |
+| `api_key` | `String` | unset | Your IPGeolocation.io API key. |
 | `base_url` | `String` | `https://api.ipgeolocation.io` | Override the API base URL. |
 | `connect_timeout` | `Numeric` | `10.0` | Time to open the connection, in seconds. |
 | `read_timeout` | `Numeric` | `30.0` | Time to wait while reading the response body, in seconds. |
@@ -176,7 +160,7 @@ The client constructor accepts either an `IpGeolocationClientConfig` or a hash w
 |-------|------------|-------|
 | `ip` | Single lookup | IPv4, IPv6, or domain. Omit it for caller IP lookup. |
 | `ips` | Bulk lookup | Array of 1 to 50,000 IPs or domains. |
-| `lang` | Single and bulk | One of `en`, `de`, `ru`, `ja`, `fr`, `cn`, `es`, `cs`, `it`, `ko`, `fa`, `pt`. |
+| `lang` | Single and bulk | One of `en`, `de`, `ru`, `ja`, `fr`, `cn`, `es`, `cs`, `it`, `ko`, `fa`, `pt`, `ar` (Arabic). |
 | `include` | Single and bulk | Array of module names such as `security`, `abuse`, `user_agent`, `hostname`, `liveHostname`, `hostnameFallbackLive`, `geo_accuracy`, `dma_code`, or `*`. |
 | `fields` | Single and bulk | Array of field paths to keep, for example `["location.country_name", "security.threat_score"]`. |
 | `excludes` | Single and bulk | Array of field paths to remove from the response. |
@@ -335,6 +319,8 @@ Compact mode omits `nil` fields. Full mode keeps them. When serializing a client
 
 ## Errors
 
+If a request error includes your configured API key, the SDK replaces it with `[REDACTED]`. This also applies to errors in typed bulk results. SDK error types and HTTP status codes stay the same. Some error details may be shortened to keep the key hidden.
+
 The SDK raises these exception classes:
 
 - `IpgeolocationSdk::ValidationError`
@@ -367,10 +353,8 @@ end
 
 ## Troubleshooting
 
-- `bulk lookup requires api_key in client config`
-  Bulk lookup does not support request-origin auth on its own.
-- `single lookup requires api_key or request_origin in client config`
-  Set at least one authentication option before calling the single lookup methods.
+- Missing API key
+  Set `api_key` in the client configuration before making a lookup.
 - `XML output is not supported by typed methods`
   Use `lookup_ip_geolocation_raw` or `bulk_lookup_ip_geolocation_raw` for XML output.
 - `client is closed`

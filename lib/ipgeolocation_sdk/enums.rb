@@ -14,9 +14,10 @@ module IpgeolocationSdk
     KO = "ko"
     FA = "fa"
     PT = "pt"
+    AR = "ar"
 
     VALUES = [
-      EN, DE, RU, JA, FR, CN, ES, CS, IT, KO, FA, PT
+      EN, DE, RU, JA, FR, CN, ES, CS, IT, KO, FA, PT, AR
     ].freeze
 
     module_function
