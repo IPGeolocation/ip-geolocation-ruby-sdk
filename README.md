@@ -49,9 +49,9 @@ bundle install
 require "ipgeolocation_sdk"
 ```
 
-RubyGems package: `ipgeolocation_sdk`  
-Package page: <https://rubygems.org/gems/ipgeolocation_sdk>  
-GitHub repository: <https://github.com/IPGeolocation/ip-geolocation-ruby-sdk>
+- RubyGems package: `ipgeolocation_sdk`
+- Package page: <https://rubygems.org/gems/ipgeolocation_sdk>
+- GitHub repository: <https://github.com/IPGeolocation/ip-geolocation-ruby-sdk>
 
 ## Quick Start
 
@@ -353,13 +353,13 @@ end
 
 ## Troubleshooting
 
-- Missing API key
+- Missing API key:
   Set `api_key` in the client configuration before making a lookup.
-- `XML output is not supported by typed methods`
+- `XML output is not supported by typed methods`:
   Use `lookup_ip_geolocation_raw` or `bulk_lookup_ip_geolocation_raw` for XML output.
-- `client is closed`
+- `client is closed`:
   Create a new client after calling `close`.
-- `TransportError` or `RequestTimeoutError`
+- `TransportError` or `RequestTimeoutError`:
   Increase `connect_timeout` or `read_timeout`, or add your own retry logic.
 
 ## Frequently Asked Questions
